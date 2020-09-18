@@ -1,0 +1,48 @@
+{
+  "name": "react-components-by-ruvkr",
+  "version": "0.1.0",
+  "private": false,
+  "description": "",
+  "author": {
+    "name": "ruvkr",
+    "email": "34903858+ruvkr@users.noreply.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ruvkr/react-components-by-ruvkr.git"
+  },
+  "homepage": "https://github.com/ruvkr/react-components-by-ruvkr.git",
+  "dependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "framer-motion": "^2.6.13",
+    "hooks-by-ruvkr": "https://github.com/ruvkr/hooks-by-ruvkr.git",
+    "polished": "^3.6.6",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.3",
+    "styled-components": "^5.2.0"
+  },
+  "scripts": {
+    "start": "BROWSER=none react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
