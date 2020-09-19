@@ -1,8 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
+import { callers } from 'hooks-by-ruvkr';
+
+import MenuViewer from './containers/MenuViewer/MenuViewer';
 
 const App = () => {
-  return <ScApp></ScApp>;
+  return (
+    <ScApp {...callers}>
+      <MenuViewer />
+    </ScApp>
+  );
 };
 
 const ScApp = styled.div`

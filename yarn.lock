@@ -5234,7 +5234,7 @@ hoist-non-react-statics@^3.0.0:
 
 "hooks-by-ruvkr@https://github.com/ruvkr/hooks-by-ruvkr.git":
   version "0.1.0"
-  resolved "https://github.com/ruvkr/hooks-by-ruvkr.git#61c44db4f33134a7b3d3cb2220801476b939c828"
+  resolved "https://github.com/ruvkr/hooks-by-ruvkr.git#6a285d2ecc28e9c6234c076a0dfb2e2488c28114"
 
 hosted-git-info@^2.1.4:
   version "2.8.8"
