@@ -3,15 +3,12 @@ import styled from 'styled-components';
 import { rgba } from 'polished';
 import { motion } from 'framer-motion';
 import { Menu } from '../../components';
-import MenuItems from './MenuItems';
 
 const MenuViewer = () => {
   return (
     <ScContainer>
       <ScDragable drag dragMomentum={false}>
-        <Menu>
-          <MenuItems />
-        </Menu>
+        <Menu/>
       </ScDragable>
     </ScContainer>
   );

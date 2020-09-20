@@ -3,11 +3,13 @@ import styled from 'styled-components';
 import { callers } from 'hooks-by-ruvkr';
 
 import MenuViewer from './containers/MenuViewer/MenuViewer';
+// import TestComponent from './containers/TestComponent/TestComponent';
 
 const App = () => {
   return (
     <ScApp {...callers}>
       <MenuViewer />
+      {/* <TestComponent /> */}
     </ScApp>
   );
 };

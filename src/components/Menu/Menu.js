@@ -1,11 +1,16 @@
-import React, { useState, useCallback, useRef } from 'react';
-import styled from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useOutsideClick } from 'hooks-by-ruvkr';
-import { rgba } from 'polished';
+///<reference path="./Items.js" />
+/** @typedef {import('./Items').MenuItem} MenuItem */
 
+import React, { useRef, useReducer } from 'react';
+import styled from 'styled-components';
+import { motion } from 'framer-motion';
+import { useOutsideClick } from 'hooks-by-ruvkr';
 import { DotsHorizontal } from '../../assets/icons/essential';
-import { MenuItemsContainer } from './MenuItem';
+
+import Container from './Container';
+import Items from './Items';
+
+import { menuItems } from './sample_items';
 
 /**
  * @param {{
@@ -13,75 +18,85 @@ import { MenuItemsContainer } from './MenuItem';
  *   disabled: boolean;
  *   icon: JSX.Element;
  *   togglerIcon: JSX.Element;
- *   isSubMenu: boolean;;
+ *   items: MenuItem[];
  * }} props
  */
 
 export const Menu = ({
   name,
-  disabled = false,
   icon,
+  disabled = false,
   togglerIcon = <DotsHorizontal />,
-  isSubMenu = false,
-  children,
+  items = menuItems,
 }) => {
+  const [state, dispatch] = useReducer(reducer, {
+    activeItems: items,
+    show: false,
+    mount: false,
+  });
+  /**
+   * @type {{
+   *   activeItems: MenuItem[];
+   *   show: boolean;
+   *   mount: boolean;
+   * }}
+   */
+  const { activeItems, show, mount } = state;
+  const togglerShow = () => {
+    if (!disabled) {
+      if (!show) dispatch({ show: true, mount: true });
+      else if (show) dispatch({ show: false });
+    }
+  };
+  const mountHandler = () => {
+    if (!show) dispatch({ mount: false, activeItems: items });
+  };
+  const subActiveHandler = items => {
+    dispatch({ activeItems: items });
+  };
+
   const togglerRef = useRef(null);
-  const [show, setShow] = useState(false);
-
-  const toggleHandler = useCallback(s => {
-    if (typeof s === 'boolean') setShow(s);
-    else setShow(p => !p);
-  }, []);
-
-  const listeners = useOutsideClick(show, () => toggleHandler(false));
+  const listeners = useOutsideClick(show, togglerShow);
 
   return (
-    <ScContainer {...listeners} $isSubMenu={isSubMenu}>
-      <ScToggler
-        onClick={() => !disabled && toggleHandler()}
-        ref={togglerRef}
-        $isSubMenu={isSubMenu}
-        $disabled={disabled}
-      >
-        {(isSubMenu || icon) && <ScMenuIcon>{icon}</ScMenuIcon>}
-        {name && <ScMenuText $isSubMenu={isSubMenu}>{name}</ScMenuText>}
-        <ScTogglerIcon
-          $isSubMenu={isSubMenu}
-          initial={{ rotate: 0 }}
-          animate={{ rotate: show ? 90 : 0 }}
-        >
+    <ScContainer {...listeners}>
+      <ScToggler ref={togglerRef} $disabled={disabled} onClick={togglerShow}>
+        {icon && <ScMenuIcon>{icon}</ScMenuIcon>}
+        {name && <ScMenuName>{name}</ScMenuName>}
+        <ScTogglerIcon animate={{ rotate: show ? 90 : 0 }}>
           {togglerIcon}
         </ScTogglerIcon>
       </ScToggler>
-      <AnimatePresence>
-        {show && (
-          <MenuItemsContainer togglerRef={togglerRef}>
-            {children}
-          </MenuItemsContainer>
-        )}
-      </AnimatePresence>
+      {mount && (
+        <Container
+          show={show}
+          togglerRef={togglerRef}
+          onAnimationComplete={mountHandler}
+        >
+          <Items items={activeItems} onSubActive={subActiveHandler} />
+        </Container>
+      )}
     </ScContainer>
   );
 };
 
+const reducer = (state, payload) => ({ ...state, ...payload });
+
 const ScContainer = styled.div`
-  display: inline-block;
-  width: ${props => (props.$isSubMenu ? '100%' : 'auto')};
+  display: inline-flex;
 `;
 
 const ScToggler = styled.button`
   font: inherit;
-  color: inherit;
-  fill: inherit;
   border: none;
   background-color: transparent;
   padding: 8px;
   display: flex;
   align-items: center;
-  width: ${props => (props.$isSubMenu ? '100%' : 'auto')};
+  color: ${props => props.theme.col2};
+  fill: ${props => props.theme.col2};
+  opacity: ${props => (props.$disabled ? 0.2 : 1)};
   cursor: ${props => (props.$disabled ? 'not-allowed' : 'pointer')};
-  color: ${props => rgba(props.theme.col2, props.$disabled ? 0.2 : 1)};
-  fill: ${props => rgba(props.theme.col2, props.$disabled ? 0.2 : 1)};
 
   &:focus,
   &:active {
@@ -90,25 +105,19 @@ const ScToggler = styled.button`
 `;
 
 const ScTogglerIcon = styled(motion.div)`
-  width: ${props => (props.$isSubMenu ? 16 : 20)}px;
-  height: ${props => (props.$isSubMenu ? 16 : 20)}px;
-  flex-shrink: 0;
-  flex-grow: 0;
+  width: 20px;
+  height: 20px;
 `;
 
-const ScMenuText = styled.div`
+const ScMenuName = styled.div`
   text-align: left;
-  padding: 0 8px;
-  flex-grow: ${props => (props.$isSubMenu ? 1 : 0)};
+  margin-right: 8px;
 `;
 
 const ScMenuIcon = styled.div`
   width: 16px;
   height: 16px;
-  flex-shrink: 0;
-  flex-grow: 0;
+  margin-right: 8px;
 `;
 
 export default Menu;
-
-export { MenuItem } from './MenuItem';
