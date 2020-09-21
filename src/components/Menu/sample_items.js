@@ -2,50 +2,137 @@
 /** @typedef {import('./Items').MenuItem} MenuItem */
 
 import React from 'react';
+import { getRandomString } from '../../libs';
 
 import {
   Upload,
   Share,
-  Magnifier,
+  // Magnifier,
   Bookmark,
   Cloud,
-  Home,
-  Heart,
+  // Home,
+  // Heart,
   Document,
-  Download,
+  // Download,
   ListView,
+  Font,
+  Clock,
+  Expand,
 } from '../../assets/icons/essential';
 
 /** @type {MenuItem[]} */
 export const menuItems = [
-  { name: 'Upload file', icon: <Upload /> },
-  { name: 'Share with others', icon: <Share /> },
   {
-    name: 'Magnify',
-    icon: <Magnifier />,
-    onClick: () => console.log('magnify'),
+    id: getRandomString(10),
+    name: 'Upload file',
+    icon: <Upload />,
   },
-  { name: 'Bookmark this page', icon: <Bookmark /> },
   {
+    id: getRandomString(10),
+    name: 'Share with others',
+    icon: <Share />,
+  },
+  // {
+  //   id: getRandomString(10),
+  //   name: 'Magnify',
+  //   icon: <Magnifier />,
+  //   onClick: () => console.log('magnify'),
+  // },
+  {
+    id: getRandomString(10),
+    name: 'Bookmark this page',
+    icon: <Bookmark />,
+  },
+  {
+    id: getRandomString(10),
     name: 'Cloud',
     icon: <Cloud />,
     disabled: true,
     onClick: () => console.log('cloud'),
   },
-  { name: 'Back to home', icon: <Home /> },
+  // {
+  //   id: getRandomString(10),
+  //   name: 'Back to home',
+  //   icon: <Home />,
+  // },
   {
-    name: 'Submenu',
+    id: getRandomString(10),
+    name: 'Short by',
     isSubMenu: true,
     icon: <ListView />,
     items: [
-      { name: 'Sub Upload file', icon: <Upload /> },
-      { name: 'Sub Share with others', icon: <Share /> },
-      { name: 'Sub Magnify', icon: <Magnifier /> },
-      { name: 'Sub Bookmark this page', icon: <Bookmark /> },
-      { name: 'Sub Cloud', icon: <Cloud />, disabled: true },
+      {
+        id: getRandomString(10),
+        name: 'File name',
+        icon: <Font />,
+      },
+      {
+        id: getRandomString(10),
+        name: 'Date created',
+        icon: <Clock />,
+      },
+      {
+        id: getRandomString(10),
+        name: 'Date Modified',
+        icon: <Clock />,
+      },
     ],
   },
-  { name: 'Fevorite', icon: <Heart /> },
-  { name: 'Download PDF', icon: <Document />, disabled: true },
-  { name: 'Download this file', icon: <Download /> },
+  // {
+  //   id: getRandomString(10),
+  //   name: 'Fevorite',
+  //   icon: <Heart />,
+  // },
+  {
+    id: getRandomString(10),
+    name: 'Download PDF',
+    icon: <Document />,
+    disabled: true,
+  },
+  // {
+  //   id: getRandomString(10),
+  //   name: 'Download this file',
+  //   icon: <Download />,
+  // },
+  {
+    id: getRandomString(10),
+    name: 'Deep submenu',
+    isSubMenu: true,
+    icon: <Expand />,
+    items: [
+      {
+        id: getRandomString(10),
+        name: 'Option',
+        icon: <Expand />,
+      },
+      {
+        id: getRandomString(10),
+        name: 'Another option',
+        icon: <Expand />,
+      },
+      {
+        id: getRandomString(10),
+        name: 'Deep',
+        icon: <Expand />,
+        isSubMenu: true,
+        items: [
+          {
+            id: getRandomString(10),
+            name: 'Deep option 1',
+            icon: <Expand />,
+          },
+          {
+            id: getRandomString(10),
+            name: 'Deep option 2',
+            icon: <Expand />,
+          },
+          {
+            id: getRandomString(10),
+            name: 'Deep option 3',
+            icon: <Expand />,
+          },
+        ],
+      },
+    ],
+  },
 ];

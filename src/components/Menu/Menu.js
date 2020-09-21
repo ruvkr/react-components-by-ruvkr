@@ -1,11 +1,16 @@
 ///<reference path="./Items.js" />
 /** @typedef {import('./Items').MenuItem} MenuItem */
 
-import React, { useRef, useReducer } from 'react';
+import React, { useRef, useReducer, useCallback } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { useOutsideClick } from 'hooks-by-ruvkr';
-import { DotsHorizontal } from '../../assets/icons/essential';
+import { useOutsideClick } from '../../hooks';
+import {
+  DotsHorizontal,
+  ChevronLeft,
+  ChevronRight,
+  CloseBig,
+} from '../../assets/icons/essential';
 
 import Container from './Container';
 import Items from './Items';
@@ -31,32 +36,103 @@ export const Menu = ({
 }) => {
   const [state, dispatch] = useReducer(reducer, {
     activeItems: items,
+    prevItems: [],
+    forwardItems: [],
     show: false,
     mount: false,
+    delayDirection: null,
   });
   /**
    * @type {{
    *   activeItems: MenuItem[];
+   *   prevItems: MenuItem[][];
+   *   forwardItems: MenuItem[][];
    *   show: boolean;
    *   mount: boolean;
    * }}
    */
-  const { activeItems, show, mount } = state;
+  const {
+    activeItems,
+    prevItems,
+    forwardItems,
+    show,
+    mount,
+    delayDirection,
+  } = state;
   const togglerShow = () => {
     if (!disabled) {
-      if (!show) dispatch({ show: true, mount: true });
+      if (!show && !mount) dispatch({ mount: true });
       else if (show) dispatch({ show: false });
     }
   };
+
   const mountHandler = () => {
-    if (!show) dispatch({ mount: false, activeItems: items });
+    if (!show) {
+      dispatch({
+        mount: false,
+        activeItems: items,
+        delayDirection: null,
+        prevItems: [],
+        forwardItems: [],
+      });
+    }
   };
+
   const subActiveHandler = items => {
-    dispatch({ activeItems: items });
+    dispatch({
+      activeItems: items,
+      prevItems: [...prevItems, activeItems],
+      forwardItems: [],
+    });
   };
+
+  const prevHandler = () => {
+    const active = prevItems.pop();
+    dispatch({
+      activeItems: active,
+      prevItems,
+      forwardItems: [...forwardItems, activeItems],
+    });
+  };
+
+  const forwardHandler = () => {
+    const active = forwardItems.pop();
+    dispatch({
+      activeItems: active,
+      forwardItems,
+      prevItems: [...prevItems, activeItems],
+    });
+  };
+
+  const getDelayDirection = useCallback(direction => {
+    dispatch({
+      show: true,
+      delayDirection: direction,
+    });
+  }, []);
 
   const togglerRef = useRef(null);
   const listeners = useOutsideClick(show, togglerShow);
+
+  const control_items = [
+    {
+      id: 'back',
+      icon: <ChevronLeft />,
+      disabled: prevItems.length === 0,
+      onClick: prevHandler,
+    },
+    {
+      id: 'forward',
+      icon: <ChevronRight />,
+      disabled: forwardItems.length === 0,
+      onClick: forwardHandler,
+    },
+    {
+      id: 'exit',
+      icon: <CloseBig />,
+      onClick: togglerShow,
+    },
+  ];
 
   return (
     <ScContainer {...listeners}>
@@ -72,8 +148,15 @@ export const Menu = ({
           show={show}
           togglerRef={togglerRef}
           onAnimationComplete={mountHandler}
+          getDelayDirection={getDelayDirection}
         >
-          <Items items={activeItems} onSubActive={subActiveHandler} />
+          <Items
+            show={show}
+            items={activeItems}
+            controlItems={control_items}
+            onSubActive={subActiveHandler}
+            delayDirection={delayDirection}
+          />
         </Container>
       )}
     </ScContainer>

@@ -1,11 +1,11 @@
 import React from 'react';
-import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import styled, { keyframes } from 'styled-components';
 import { ChevronRight } from '../../assets/icons/essential';
 import Controls from './Controls';
 
 /**
  * @typedef {{
+ *   id: string;
  *   disabled: boolean;
  *   icon: JSX.Element;
  *   isSubMenu: boolean;
@@ -19,9 +19,16 @@ import Controls from './Controls';
  * @param {{
  *   items: MenuItem[];
  *   onSubActive: (items: MenuItem[]) => void;
+ *   controlItems: {
+ *     id: string;
+ *     icon: JSX.Element;
+ *     disabled: boolean;
+ *     onClick: () => void;
+ *   }[];
+ *   delayDirection: 1 | -1;
  * }}
  */
-const Items = ({ items, onSubActive }) => {
+const Items = ({ show, items, onSubActive, controlItems, delayDirection }) => {
   /** @param {MenuItem} item */
   const clickHandler = item => {
     if (!item.disabled) {
@@ -32,17 +39,18 @@ const Items = ({ items, onSubActive }) => {
 
   const _items = items.map((item, index) => (
     <ScItem
-      key={item.name + index}
+      key={item.id || index}
       onClick={() => clickHandler(item)}
       $disabled={item.disabled}
-      initial={{ y: -10, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{
-        type: 'tween',
-        duration: ((items.length - index) * 1) / items.length,
-        ease: 'easeInOut',
-        // delay: 0.05 * index,
-      }}
+      $delay={
+        delayDirection // if exist
+          ? delayDirection === 1
+            ? index * 50 + 100 // from top
+            : (items.length - index) * 50 + 100 // from bottom
+          : 100
+      }
+      $play={show}
+      $fromBottom={delayDirection === -1}
     >
       <ScIcon $disabled={item.disabled}>{item.icon}</ScIcon>
       <ScName $disabled={item.disabled}>{item.name}</ScName>
@@ -57,41 +65,68 @@ const Items = ({ items, onSubActive }) => {
   return (
     <ScContainer>
       {_items}
-      <Controls />
+      <Controls controls={controlItems} />
     </ScContainer>
   );
 };
 
-const ScContainer = styled(motion.div)``;
+const ScContainer = styled.div`
+  /* max-height: 80vh; */
+  /* max-width: 80vw; */
+  /* overflow: auto; */
+`;
 
-const ScItem = styled(motion.div)`
+const slidetop = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(-10px); }
+  100% {
+    opacity: 1;
+    transform: none; }
+`;
+
+const slidebottom = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(10px); }
+  100% {
+    opacity: 1;
+    transform: none; }
+`;
+
+const ScItem = styled.div`
   width: 100%;
   padding: 12px;
   display: flex;
   align-items: center;
-  color: ${props => props.theme.col1};
-  fill: ${props => props.theme.col2};
-  cursor: ${props => (props.$disabled ? 'not-allowed' : 'pointer')};
+  color: ${p => p.theme.col1};
+  fill: ${p => p.theme.col2};
+  cursor: ${p => (p.$disabled ? 'not-allowed' : 'pointer')};
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: ${p => (p.$fromBottom ? slidebottom : slidetop)} 300ms ease-in-out
+    ${p => p.$delay}ms forwards;
+  animation-play-state: ${p => (p.$play ? 'running' : 'paused')};
 `;
 
 const ScIcon = styled.div`
   width: 20px;
   height: 20px;
   margin-right: 12px;
-  opacity: ${props => (props.$disabled ? 0.2 : 1)};
+  opacity: ${p => (p.$disabled ? 0.2 : 1)};
   flex-shrink: 0;
 `;
 
 const ScName = styled.div`
   flex-grow: 1;
-  opacity: ${props => (props.$disabled ? 0.2 : 1)};
+  opacity: ${p => (p.$disabled ? 0.2 : 1)};
 `;
 
 const ScMore = styled.div`
   width: 20px;
   height: 20px;
   margin-left: 12px;
-  opacity: ${props => (props.$disabled ? 0.2 : 1)};
+  opacity: ${p => (p.$disabled ? 0.2 : 1)};
   flex-shrink: 0;
 `;
 

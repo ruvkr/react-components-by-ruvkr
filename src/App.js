@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { callers } from 'hooks-by-ruvkr';
+import { callers } from './hooks';
 
 import MenuViewer from './containers/MenuViewer/MenuViewer';
 // import TestComponent from './containers/TestComponent/TestComponent';

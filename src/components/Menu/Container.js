@@ -3,9 +3,15 @@ import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { rgba } from 'polished';
 import { motion } from 'framer-motion';
-import { usePosition } from 'hooks-by-ruvkr';
+import { usePosition } from '../../hooks/usePosition';
 
-const Container = ({ children, show, togglerRef, onAnimationComplete }) => {
+const Container = ({
+  children,
+  show,
+  togglerRef,
+  onAnimationComplete,
+  getDelayDirection,
+}) => {
   const containerRef = useRef(null);
   const position = useRef(null);
 
@@ -13,19 +19,37 @@ const Container = ({ children, show, togglerRef, onAnimationComplete }) => {
 
   useLayoutEffect(() => {
     if (position.current) {
-      const { x, y, relativeX, relativeY } = position.current;
-      containerRef.current.style.left = x + 'px';
-      containerRef.current.style.top = y + 'px';
-      containerRef.current.style.transformOrigin = relativeX + ' ' + relativeY;
+      const {
+        left,
+        right,
+        top,
+        bottom,
+        transformOriginX,
+        transformOriginY,
+      } = position.current;
+
+      if (left) containerRef.current.style.left = left + 'px';
+      else containerRef.current.style.right = right + 'px';
+
+      if (top) {
+        containerRef.current.style.top = top + 'px';
+        getDelayDirection(1);
+      } else {
+        containerRef.current.style.bottom = bottom + 'px';
+        getDelayDirection(-1);
+      }
+
+      containerRef.current.style.transformOrigin =
+        transformOriginX + ' ' + transformOriginY;
     }
-  }, []);
+  }, [getDelayDirection]);
 
   return createPortal(
     <ScContainer
       ref={containerRef}
-      variants={variants}
-      initial='hide'
-      animate={show ? 'show' : 'hide'}
+      initial={{ opacity: 0, scale: 0 }}
+      animate={show ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
+      transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
       onAnimationComplete={onAnimationComplete}
     >
       <ScBackground layout />
@@ -33,27 +57,6 @@ const Container = ({ children, show, togglerRef, onAnimationComplete }) => {
     </ScContainer>,
     document.body
   );
-};
-
-const variants = {
-  hide: {
-    opacity: 0.5,
-    scale: 0,
-    transition: {
-      type: 'tween',
-      duration: 0.2,
-      ease: 'easeInOut',
-    },
-  },
-  show: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      type: 'tween',
-      duration: 0.3,
-      ease: 'easeInOut',
-    },
-  },
 };
 
 const ScContainer = styled(motion.div)`
