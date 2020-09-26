@@ -57,7 +57,7 @@ export const menuItems = [
   // },
   {
     id: getRandomString(10),
-    name: 'Short by',
+    name: 'Sort by',
     isSubMenu: true,
     icon: <ListView />,
     items: [

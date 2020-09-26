@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
+import { rgba } from 'polished';
 import { motion } from 'framer-motion';
 import { darken } from 'polished';
 
@@ -18,10 +19,10 @@ const Controls = ({ controls = [] }) => {
     <ScControlItem
       key={item.id}
       onClick={() => !item.disabled && item.onClick && item.onClick()}
-      $disabled={item.disabled}
+      disabled={item.disabled}
       $duration={index * 100 + 500}
     >
-      {item.icon}
+      <ScIcon>{item.icon}</ScIcon>
     </ScControlItem>
   ));
 
@@ -29,9 +30,9 @@ const Controls = ({ controls = [] }) => {
 };
 
 const ScContainer = styled(motion.div)`
-  padding: 12px 20px;
   background-color: ${props => darken(0.01, props.theme.col5)};
   border-radius: 0 0 8px 8px;
+  overflow: hidden;
   display: flex;
   justify-content: space-between;
   position: sticky;
@@ -45,15 +46,39 @@ const slidein = keyframes`
     transform: none; }
 `;
 
-const ScControlItem = styled.div`
-  fill: ${props => props.theme.col2};
+const ScControlItem = styled.button`
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;      
+  font: inherit;
+  border: none;
+  padding: 12px;
+  background-color: transparent;
+  fill: ${p => p.theme.col2};
+  cursor: pointer;
+  transition: background-color 300ms ease-in-out;
+  transform: translateY(20px);
+  animation-duration: ${p => p.$duration}ms;
+  animation-fill-mode: forwards;
+  animation-name: ${slidein};
+  animation-timing-function: ease-in-out;
+
+  &:hover:not(:disabled),
+  &:focus,
+  &:active {
+    outline: none;
+    background-color: ${props => rgba(props.theme.col2, 0.2)};
+    transition: background-color 300ms ease-in-out;
+  }
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.2;
+  }
+`;
+
+const ScIcon = styled.div`
   width: 20px;
   height: 20px;
-  transform: translateX(20px);
-  opacity: ${props => (props.$disabled ? 0.2 : 1)};
-  transition: opacity 300ms ease-in-out;
-  cursor: ${props => (props.$disabled ? 'not-allowed' : 'pointer')};
-  animation: ${slidein} ${p => p.$duration}ms ease-in-out forwards;
 `;
 
 export default Controls;

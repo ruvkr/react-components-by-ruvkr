@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
+import { rgba } from 'polished';
 import { ChevronRight } from '../../assets/icons/essential';
 import Controls from './Controls';
 
@@ -41,13 +42,11 @@ const Items = ({ show, items, onSubActive, controlItems, delayDirection }) => {
     <ScItem
       key={item.id || index}
       onClick={() => clickHandler(item)}
-      $disabled={item.disabled}
+      disabled={item.disabled}
       $delay={
-        delayDirection // if exist
-          ? delayDirection === 1
-            ? index * 50 + 100 // from top
-            : (items.length - index) * 50 + 100 // from bottom
-          : 100
+        delayDirection === 1
+          ? index * 50 + 100 // from top
+          : (items.length - index) * 50 + 100 // from bottom
       }
       $play={show}
       $fromBottom={delayDirection === -1}
@@ -94,19 +93,43 @@ const slidebottom = keyframes`
     transform: none; }
 `;
 
-const ScItem = styled.div`
+const ScItem = styled.button`
   width: 100%;
+  font: inherit;
+  border: none;
+  background-color: transparent;
   padding: 12px;
   display: flex;
   align-items: center;
+  text-align: left;
   color: ${p => p.theme.col1};
   fill: ${p => p.theme.col2};
-  cursor: ${p => (p.$disabled ? 'not-allowed' : 'pointer')};
+  cursor: pointer;
+  transition: background-color 300ms ease-in-out;
   opacity: 0;
   transform: translateY(-10px);
-  animation: ${p => (p.$fromBottom ? slidebottom : slidetop)} 300ms ease-in-out
-    ${p => p.$delay}ms forwards;
+  animation-delay: ${p => p.$delay}ms;
+  animation-direction: normal;
+  animation-duration: 300ms;
+  animation-fill-mode: forwards;
+  animation-iteration-count: 1;
+  animation-name: ${p => (p.$fromBottom ? slidebottom : slidetop)};
   animation-play-state: ${p => (p.$play ? 'running' : 'paused')};
+  animation-timing-function: ease-in-out;
+
+  &:hover:not(:disabled),
+  &:focus,
+  &:active {
+    outline: none;
+    background-color: ${props => rgba(props.theme.col2, 0.2)};
+    transition: background-color 300ms ease-in-out;
+  }
+  &:disabled {
+    cursor: not-allowed;
+  }
+  &:first-of-type {
+    border-radius: 8px 8px 0 0;
+  }
 `;
 
 const ScIcon = styled.div`

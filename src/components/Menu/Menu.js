@@ -3,6 +3,7 @@
 
 import React, { useRef, useReducer, useCallback } from 'react';
 import styled from 'styled-components';
+import { rgba } from 'polished';
 import { motion } from 'framer-motion';
 import { useOutsideClick } from '../../hooks';
 import {
@@ -40,7 +41,7 @@ export const Menu = ({
     forwardItems: [],
     show: false,
     mount: false,
-    delayDirection: null,
+    delayDirection: 1,
   });
   /**
    * @type {{
@@ -71,7 +72,7 @@ export const Menu = ({
       dispatch({
         mount: false,
         activeItems: items,
-        delayDirection: null,
+        delayDirection: 1,
         prevItems: [],
         forwardItems: [],
       });
@@ -136,7 +137,12 @@ export const Menu = ({
 
   return (
     <ScContainer {...listeners}>
-      <ScToggler ref={togglerRef} $disabled={disabled} onClick={togglerShow}>
+      <ScToggler
+        ref={togglerRef}
+        disabled={disabled}
+        $show={show}
+        onClick={togglerShow}
+      >
         {icon && <ScMenuIcon>{icon}</ScMenuIcon>}
         {name && <ScMenuName>{name}</ScMenuName>}
         <ScTogglerIcon animate={{ rotate: show ? 90 : 0 }}>
@@ -172,18 +178,26 @@ const ScContainer = styled.div`
 const ScToggler = styled.button`
   font: inherit;
   border: none;
-  background-color: transparent;
+  border-radius: 8px;
+  background-color: ${p => (p.$show ? rgba(p.theme.col2, 0.2) : 'transparent')};
   padding: 8px;
   display: flex;
   align-items: center;
   color: ${props => props.theme.col2};
   fill: ${props => props.theme.col2};
-  opacity: ${props => (props.$disabled ? 0.2 : 1)};
-  cursor: ${props => (props.$disabled ? 'not-allowed' : 'pointer')};
+  cursor: pointer;
+  transition: background-color 300ms ease-in-out;
 
+  &:hover:not(:disabled),
   &:focus,
   &:active {
     outline: none;
+    background-color: ${props => rgba(props.theme.col2, 0.2)};
+    transition: background-color 300ms ease-in-out;
+  }
+  &:disabled {
+    opacity: 0.2;
+    cursor: not-allowed;
   }
 `;
 

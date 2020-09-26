@@ -8,7 +8,7 @@ const MenuViewer = () => {
   return (
     <ScContainer>
       <ScDragable drag dragMomentum={false}>
-        <Menu/>
+        <Menu name='Menu' />
       </ScDragable>
     </ScContainer>
   );
