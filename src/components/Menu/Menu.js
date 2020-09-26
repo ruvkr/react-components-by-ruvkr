@@ -20,7 +20,7 @@ import { menuItems } from './sample_items';
 
 /**
  * @param {{
- *   name: string;
+ *   name: string; 
  *   disabled: boolean;
  *   icon: JSX.Element;
  *   togglerIcon: JSX.Element;

@@ -26,7 +26,7 @@ import Controls from './Controls';
  *     disabled: boolean;
  *     onClick: () => void;
  *   }[];
- *   delayDirection: 1 | -1;
+ *   delayDirection: 1 | -1; 
  * }}
  */
 const Items = ({ show, items, onSubActive, controlItems, delayDirection }) => {

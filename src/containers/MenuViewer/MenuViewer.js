@@ -17,7 +17,7 @@ const MenuViewer = () => {
 const ScDragable = styled(motion.div)`
   width: 100px;
   height: 100px;
-  border-radius: 50%;
+  border-radius: 50%; 
   position: fixed;
   top: 50px;
   left: 50px;

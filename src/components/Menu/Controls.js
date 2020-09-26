@@ -16,7 +16,7 @@ import { darken } from 'polished';
  */
 const Controls = ({ controls = [] }) => {
   const _controls = controls.map((item, index) => (
-    <ScControlItem
+    <ScControlItem 
       key={item.id}
       onClick={() => !item.disabled && item.onClick && item.onClick()}
       disabled={item.disabled}
