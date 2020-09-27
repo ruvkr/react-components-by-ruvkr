@@ -29,7 +29,7 @@ export const menuItems = [
   },
   {
     id: getRandomString(10),
-    name: 'Share with others', 
+    name: 'Share with others',
     icon: <Share />,
   },
   // {

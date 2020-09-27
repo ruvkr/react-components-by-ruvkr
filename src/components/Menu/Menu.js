@@ -20,7 +20,7 @@ import { menuItems } from './sample_items';
 
 /**
  * @param {{
- *   name: string; 
+ *   name: string;
  *   disabled: boolean;
  *   icon: JSX.Element;
  *   togglerIcon: JSX.Element;
@@ -189,8 +189,7 @@ const ScToggler = styled.button`
   transition: background-color 300ms ease-in-out;
 
   &:hover:not(:disabled),
-  &:focus,
-  &:active {
+  &:focus {
     outline: none;
     background-color: ${props => rgba(props.theme.col2, 0.2)};
     transition: background-color 300ms ease-in-out;

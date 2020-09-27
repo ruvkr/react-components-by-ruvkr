@@ -26,7 +26,7 @@ import Controls from './Controls';
  *     disabled: boolean;
  *     onClick: () => void;
  *   }[];
- *   delayDirection: 1 | -1; 
+ *   delayDirection: 1 | -1;
  * }}
  */
 const Items = ({ show, items, onSubActive, controlItems, delayDirection }) => {
@@ -118,8 +118,7 @@ const ScItem = styled.button`
   animation-timing-function: ease-in-out;
 
   &:hover:not(:disabled),
-  &:focus,
-  &:active {
+  &:focus {
     outline: none;
     background-color: ${props => rgba(props.theme.col2, 0.2)};
     transition: background-color 300ms ease-in-out;

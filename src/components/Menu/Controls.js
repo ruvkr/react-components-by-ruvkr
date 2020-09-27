@@ -16,27 +16,41 @@ import { darken } from 'polished';
  */
 const Controls = ({ controls = [] }) => {
   const _controls = controls.map((item, index) => (
-    <ScControlItem 
+    <ScControlItem
       key={item.id}
       onClick={() => !item.disabled && item.onClick && item.onClick()}
       disabled={item.disabled}
       $duration={index * 100 + 500}
     >
-      <ScIcon>{item.icon}</ScIcon>
+      <ScIcon layout>{item.icon}</ScIcon>
     </ScControlItem>
   ));
 
-  return <ScContainer layout>{_controls}</ScContainer>;
+  return (
+    <ScContainer>
+      <ScBg layout />
+      {_controls}
+    </ScContainer>
+  );
 };
 
-const ScContainer = styled(motion.div)`
-  background-color: ${props => darken(0.01, props.theme.col5)};
-  border-radius: 0 0 8px 8px;
-  overflow: hidden;
+const ScContainer = styled.div`
   display: flex;
-  justify-content: space-between;
   position: sticky;
   bottom: 0;
+`;
+
+const ScBg = styled(motion.div)`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: ${p => darken(0.01, p.theme.col5)};
+  border-radius: 0 0 8px 8px;
+  z-index: -1;
 `;
 
 const slidein = keyframes`
@@ -49,14 +63,13 @@ const slidein = keyframes`
 const ScControlItem = styled.button`
   display: flex;
   flex-grow: 1;
-  justify-content: center;      
+  justify-content: center;
   font: inherit;
   border: none;
-  padding: 12px;
+  padding: 4px;
   background-color: transparent;
   fill: ${p => p.theme.col2};
   cursor: pointer;
-  transition: background-color 300ms ease-in-out;
   transform: translateY(20px);
   animation-duration: ${p => p.$duration}ms;
   animation-fill-mode: forwards;
@@ -64,11 +77,12 @@ const ScControlItem = styled.button`
   animation-timing-function: ease-in-out;
 
   &:hover:not(:disabled),
-  &:focus,
-  &:active {
+  &:focus {
     outline: none;
-    background-color: ${props => rgba(props.theme.col2, 0.2)};
-    transition: background-color 300ms ease-in-out;
+    div {
+      background-color: ${p => rgba(p.theme.col2, 0.2)};
+      transition: background-color 300ms ease-in-out;
+    }
   }
   &:disabled {
     cursor: not-allowed;
@@ -76,9 +90,13 @@ const ScControlItem = styled.button`
   }
 `;
 
-const ScIcon = styled.div`
-  width: 20px;
-  height: 20px;
+const ScIcon = styled(motion.div)`
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  background-color: transparent;
+  transition: background-color 300ms ease-in-out;
+  border-radius: 50%;
 `;
 
 export default Controls;
