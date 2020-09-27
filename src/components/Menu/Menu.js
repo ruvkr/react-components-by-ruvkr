@@ -12,11 +12,8 @@ import {
   ChevronRight,
   CloseBig,
 } from '../../assets/icons/essential';
-
 import Container from './Container';
 import Items from './Items';
-
-import { menuItems } from './sample_items';
 
 /**
  * @param {{
@@ -33,7 +30,7 @@ export const Menu = ({
   icon,
   disabled = false,
   togglerIcon = <DotsHorizontal />,
-  items = menuItems,
+  items = [],
 }) => {
   const [state, dispatch] = useReducer(reducer, {
     activeItems: items,
@@ -61,7 +58,7 @@ export const Menu = ({
     delayDirection,
   } = state;
   const togglerShow = () => {
-    if (!disabled) {
+    if (!disabled && items.length > 0) {
       if (!show && !mount) dispatch({ mount: true });
       else if (show) dispatch({ show: false });
     }

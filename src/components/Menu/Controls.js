@@ -75,6 +75,7 @@ const ScControlItem = styled.button`
   animation-fill-mode: forwards;
   animation-name: ${slidein};
   animation-timing-function: ease-in-out;
+  transition: opacity 300ms ease-in-out;
 
   &:hover:not(:disabled),
   &:focus {
@@ -87,6 +88,7 @@ const ScControlItem = styled.button`
   &:disabled {
     cursor: not-allowed;
     opacity: 0.2;
+    transition: opacity 300ms ease-in-out;
   }
 `;
 

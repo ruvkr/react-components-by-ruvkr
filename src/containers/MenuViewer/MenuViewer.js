@@ -4,11 +4,13 @@ import { rgba } from 'polished';
 import { motion } from 'framer-motion';
 import { Menu } from '../../components';
 
+import { menuItems } from './sample_items';
+
 const MenuViewer = () => {
   return (
     <ScContainer>
       <ScDragable drag dragMomentum={false}>
-        <Menu />
+        <Menu items={menuItems} />
       </ScDragable>
     </ScContainer>
   );
