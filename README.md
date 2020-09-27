@@ -11,7 +11,7 @@
 
 ## Menu
 
-![Menu](/home/rajib/Projects/react-components-by-ruvkr/gifs/MenuComponent.gif)
+![Menu](./gifs/MenuComponent.gif)
 
 - **Multi-level**
 - **Auto position**
