@@ -8,6 +8,7 @@
 ## Index
 
 - [Menu](#Menu)
+- [Side Drawer](#Side Drawer)
 
 ## Menu
 
@@ -18,3 +19,10 @@
 - **Auto-hide when clicked outside**
 - **Uses React portal**
 
+## Side Drawer
+
+![Menu](./gifs/SideDrawer.gif)
+
+- **Swipeable**
+- **Responsive**
+- **Spring animated**
