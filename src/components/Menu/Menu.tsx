@@ -132,17 +132,14 @@ export const Menu: React.FC<Props> = ({
 
   return (
     <ScContainer {...listeners}>
-      <ScToggler
-        ref={togglerRef}
-        disabled={disabled}
-        $show={show}
-        onClick={togglerShow}
-      >
-        {icon && <ScMenuIcon>{icon}</ScMenuIcon>}
-        {name && <ScMenuName>{name}</ScMenuName>}
-        <ScTogglerIcon animate={{ rotate: show ? 90 : 0 }}>
-          {togglerIcon}
-        </ScTogglerIcon>
+      <ScToggler ref={togglerRef} disabled={disabled} onClick={togglerShow}>
+        <ScFocus tabIndex={-1}>
+          {icon && <ScMenuIcon>{icon}</ScMenuIcon>}
+          {name && <ScMenuName>{name}</ScMenuName>}
+          <ScTogglerIcon animate={{ rotate: show ? 90 : 0 }}>
+            {togglerIcon}
+          </ScTogglerIcon>
+        </ScFocus>
       </ScToggler>
       {mount && (
         <Container
@@ -173,28 +170,51 @@ const ScContainer = styled.div`
   display: inline-flex;
 `;
 
-const ScToggler = styled.button<{ $show: boolean }>`
+const ScToggler = styled.button`
   font: inherit;
   border: none;
-  border-radius: 8px;
-  background-color: ${p => (p.$show ? rgba(p.theme.col2, 0.2) : 'transparent')};
-  padding: 8px;
+  background-color: transparent;
+  padding: 0;
   display: flex;
-  align-items: center;
   color: ${props => props.theme.col2};
   fill: ${props => props.theme.col2};
   cursor: pointer;
-  transition: background-color 300ms ease-in-out;
 
-  &:hover:not(:disabled),
-  &:focus {
+  &:focus,
+  &:active {
     outline: none;
-    background-color: ${props => rgba(props.theme.col2, 0.2)};
-    transition: background-color 300ms ease-in-out;
+    & > div {
+      background-color: ${p => rgba(p.theme.col2, 0.2)};
+      transition: background-color 300ms ease-in-out;
+    }
   }
   &:disabled {
     opacity: 0.2;
     cursor: not-allowed;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) {
+      & > div {
+        background-color: ${p => rgba(p.theme.col2, 0.2)};
+        transition: background-color 300ms ease-in-out;
+      }
+    }
+  }
+`;
+
+const ScFocus = styled.div`
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  transition: background-color 300ms ease-in-out;
+
+  &:focus,
+  &:active {
+    outline: none;
   }
 `;
 

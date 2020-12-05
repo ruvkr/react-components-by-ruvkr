@@ -39,13 +39,15 @@ export const Items: React.FC<Props> = ({
       $play={show}
       $fromBottom={delayDirection === -1}
     >
-      <ScIcon $disabled={item.disabled}>{item.icon}</ScIcon>
-      <ScName $disabled={item.disabled}>{item.name}</ScName>
-      {item.isSubMenu && (
-        <ScMore $disabled={item.disabled}>
-          <ChevronForward />
-        </ScMore>
-      )}
+      <ScFocus tabIndex={-1}>
+        <ScIcon $disabled={item.disabled}>{item.icon}</ScIcon>
+        <ScName $disabled={item.disabled}>{item.name}</ScName>
+        {item.isSubMenu && (
+          <ScMore $disabled={item.disabled}>
+            <ChevronForward />
+          </ScMore>
+        )}
+      </ScFocus>
     </ScItem>
   ));
 
@@ -92,13 +94,11 @@ const ScItem = styled.button<ScItemI>`
   font: inherit;
   border: none;
   background-color: transparent;
-  padding: 12px;
+  padding: 0;
   display: flex;
-  align-items: center;
   text-align: left;
   color: ${p => p.theme.col1};
   cursor: pointer;
-  transition: background-color 300ms ease-in-out;
   opacity: 0;
   transform: translateY(-10px);
   animation-delay: ${p => p.$delay}ms;
@@ -110,17 +110,44 @@ const ScItem = styled.button<ScItemI>`
   animation-play-state: ${p => (p.$play ? 'running' : 'paused')};
   animation-timing-function: ease-in-out;
 
-  &:hover:not(:disabled),
-  &:focus {
+  &:focus,
+  &:active {
     outline: none;
-    background-color: ${props => rgba(props.theme.col2, 0.2)};
-    transition: background-color 300ms ease-in-out;
+    & > div {
+      background-color: ${p => rgba(p.theme.col2, 0.2)};
+      transition: background-color 300ms ease-in-out;
+    }
   }
   &:disabled {
     cursor: not-allowed;
   }
   &:first-of-type {
-    border-radius: 8px 8px 0 0;
+    & > div {
+      border-radius: 8px 8px 0 0;
+    }
+  }
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) {
+      & > div {
+        background-color: ${p => rgba(p.theme.col2, 0.2)};
+        transition: background-color 300ms ease-in-out;
+      }
+    }
+  }
+`;
+
+const ScFocus = styled.div`
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  transition: background-color 300ms ease-in-out;
+
+  &:focus,
+  &:active {
+    outline: none;
   }
 `;
 
@@ -144,6 +171,9 @@ const ScMore = styled.div<{ $disabled?: boolean }>`
   width: 20px;
   height: 20px;
   margin-left: 12px;
+  color: ${p => p.theme.col2};
+  fill: ${p => p.theme.col2};
+  stroke: ${p => p.theme.col2};
   opacity: ${p => (p.$disabled ? 0.2 : 1)};
   flex-shrink: 0;
 `;

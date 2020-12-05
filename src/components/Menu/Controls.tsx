@@ -16,7 +16,9 @@ export const Controls: React.FC<Props> = ({ controls }) => {
       disabled={item.disabled}
       $duration={index * 100 + 500}
     >
-      <ScIcon layout>{item.icon}</ScIcon>
+      <ScIcon tabIndex={-1} layout>
+        {item.icon}
+      </ScIcon>
     </ScControlItem>
   ));
 
@@ -70,10 +72,10 @@ const ScControlItem = styled.button<{ $duration: number }>`
   animation-timing-function: ease-in-out;
   transition: opacity 300ms ease-in-out;
 
-  &:hover:not(:disabled),
-  &:focus {
+  &:focus,
+  &:active {
     outline: none;
-    div {
+    & > div {
       background-color: ${p => rgba(p.theme.col2, 0.2)};
       transition: background-color 300ms ease-in-out;
     }
@@ -82,6 +84,14 @@ const ScControlItem = styled.button<{ $duration: number }>`
     cursor: not-allowed;
     opacity: 0.2;
     transition: opacity 300ms ease-in-out;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) {
+      & > div {
+        background-color: ${p => rgba(p.theme.col2, 0.2)};
+        transition: background-color 300ms ease-in-out;
+      }
+    }
   }
 `;
 
@@ -95,4 +105,9 @@ const ScIcon = styled(motion.div)`
   background-color: transparent;
   transition: background-color 300ms ease-in-out;
   border-radius: 50%;
+
+  &:focus,
+  &:active {
+    outline: none;
+  }
 `;
