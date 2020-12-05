@@ -33,8 +33,8 @@ const ScDragable = styled(motion.div)`
   height: 100px;
   border-radius: 50%;
   position: fixed;
-  top: 50px;
-  left: 50px;
+  bottom: 50px;
+  right: 50px;
   display: flex;
   align-items: center;
   justify-content: center;

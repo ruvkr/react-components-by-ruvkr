@@ -10,9 +10,11 @@ import { TogglerButton } from './TogglerButton';
 import { Backdrop } from './Backdrop';
 import { SDContent } from './content/SDContent';
 
+const initialX = window.innerWidth < 480 ? -window.innerWidth * 0.8 : -320;
+
 export const SideDrawer: React.FC = () => {
   const [opened, setOpened] = useState(false);
-  const x = useMotionValue<number>(0);
+  const x = useMotionValue<number>(initialX);
   const progress = useMotionValue<number>(0);
 
   const openHandler = () => !opened && setOpened(true);
@@ -97,6 +99,6 @@ const ScSideDrawer = styled(motion.div)`
 
   @media (min-width: 480px) {
     width: 320px;
-    transform: translateX(-256px);
+    transform: translateX(-320px);
   }
 `;
