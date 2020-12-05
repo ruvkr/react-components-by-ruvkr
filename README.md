@@ -7,8 +7,8 @@
 
 ## Index
 
-- [Menu](#Menu)
-- [Side Drawer](#SideDrawer)
+- [Menu](#menu)
+- [Side Drawer](#side-drawer)
 
 ## Menu
 
@@ -21,7 +21,7 @@
 
 ## Side Drawer
 
-![SideDrawer](./gifs/SideDrawer.gif)
+![Side Drawer](./gifs/SideDrawer.gif)
 
 - **Swipeable**
 - **Responsive**
