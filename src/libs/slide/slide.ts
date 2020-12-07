@@ -3,14 +3,14 @@ import { Pan, Directions, MoveData, EndData } from '../pan';
 import { Spring } from '../spring';
 
 interface HorizontalVariables {
-  difference: 'dx';
+  delta: 'dx';
   motion: 'x';
   origin: 'ox';
   velocity: 'vx';
 }
 
 interface VerticalVariables {
-  difference: 'dy';
+  delta: 'dy';
   motion: 'y';
   origin: 'oy';
   velocity: 'vy';
@@ -33,18 +33,26 @@ export function Slide({
   let localOnUpdate = onUpdate;
   let localOpened = opened;
 
-  const pan = Pan();
-  const spring = Spring({
-    onUpdate: value => localOnUpdate({ value, progress: getProgress(value) }),
-    onComplete: () => {
-      if (localOpened) localOnOpen();
-      else localOnClose();
-    },
-  });
-
   let openConfig: Config;
   let closeConfig: Config;
   let distance: number;
+  let currentValue: number;
+
+  const pan = Pan();
+  const spring = Spring({
+    onUpdate: springUpdateHandler,
+    onComplete: springCompleteHandler,
+  });
+
+  function springUpdateHandler(value: number) {
+    currentValue = value;
+    localOnUpdate({ value, progress: getProgress(value) });
+  }
+
+  function springCompleteHandler() {
+    if (localOpened) localOnOpen();
+    else localOnClose();
+  }
 
   function destroy() {
     pan.remove();
@@ -64,10 +72,12 @@ export function Slide({
 
   function initMotion() {
     if (localOpened) {
-      localOnUpdate({ value: openConfig.translate, progress: 1 });
+      currentValue = openConfig.translate;
+      localOnUpdate({ value: currentValue, progress: 1 });
       localOnOpen();
     } else {
-      localOnUpdate({ value: closeConfig.translate, progress: 0 });
+      currentValue = closeConfig.translate;
+      localOnUpdate({ value: currentValue, progress: 0 });
       localOnClose();
     }
   }
@@ -79,7 +89,7 @@ export function Slide({
     pan.remove().add({
       callback: callback,
       panDirection: config.direction,
-      test: data =>
+      startTest: data =>
         config.startBoundary
           ? data[config.motion] >= config.startBoundary[0] &&
             data[config.motion] <= config.startBoundary[1]
@@ -88,16 +98,11 @@ export function Slide({
   }
 
   function openHandler(data: MoveData | EndData) {
-    const valueRaw =
-      closeConfig.translate + data[openConfig.motion] - data[openConfig.origin];
-    let value = valueRaw;
-    let edge = false;
-
-    if (openConfig.constraint) {
-      const constraintVal = getConstraintValue(valueRaw, openConfig.constraint);
-      value = constraintVal.value;
-      edge = constraintVal.edge;
-    }
+    const valueRaw = currentValue + data[openConfig.delta];
+    const { value, edge } = openConfig.constraint
+      ? getConstraintValue(valueRaw, openConfig.constraint)
+      : { value: valueRaw, edge: false };
+    currentValue = value;
 
     if (data.final) {
       if (openConfig.finalizeTest ? openConfig.finalizeTest(data) : true) {
@@ -122,18 +127,11 @@ export function Slide({
   }
 
   function closeHandler(data: MoveData | EndData) {
-    const valueRaw =
-      openConfig.translate +
-      data[closeConfig.motion] -
-      data[closeConfig.origin];
-    let value = valueRaw;
-    let edge = false;
-
-    if (closeConfig.constraint) {
-      const constraintVal = getConstraintValue(valueRaw, closeConfig.constraint);
-      value = constraintVal.value;
-      edge = constraintVal.edge;
-    }
+    const valueRaw = currentValue + data[closeConfig.delta];
+    const { value, edge } = closeConfig.constraint
+      ? getConstraintValue(valueRaw, closeConfig.constraint)
+      : { value: valueRaw, edge: false };
+    currentValue = value;
 
     if (data.final) {
       if (closeConfig.finalizeTest ? closeConfig.finalizeTest(data) : true) {
@@ -243,8 +241,8 @@ function getConstraintValue(
   value: number,
   [min, max]: [min: number, max: number]
 ): { value: number; edge: boolean } {
-  if (value < min) return { value: min, edge: true };
-  if (value > max) return { value: max, edge: true };
+  if (value <= min) return { value: min, edge: true };
+  if (value >= max) return { value: max, edge: true };
   return { value, edge: false };
 }
 
@@ -264,14 +262,14 @@ function getVariables(
 
   if (HorizontalDirections.includes(direction))
     return {
-      difference: 'dx',
+      delta: 'dx',
       motion: 'x',
       origin: 'ox',
       velocity: 'vx',
     };
   else if (VerticalDirections.includes(direction))
     return {
-      difference: 'dy',
+      delta: 'dy',
       motion: 'y',
       origin: 'oy',
       velocity: 'vy',

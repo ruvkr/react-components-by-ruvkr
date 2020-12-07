@@ -23,6 +23,8 @@ export interface MoveData {
   oy: number;
   x: number;
   y: number;
+  dx: number;
+  dy: number;
   final: false;
 }
 
@@ -31,6 +33,8 @@ export interface EndData {
   oy: number;
   x: number;
   y: number;
+  dx: number;
+  dy: number;
   vx: number;
   vy: number;
   direction: Directions;
@@ -42,5 +46,5 @@ export interface EndData {
 export interface PanConfig {
   panDirection?: Directions;
   callback?: (data: MoveData | EndData) => void;
-  test?: (data: Touch) => boolean;
+  startTest?: (data: Touch) => boolean;
 }

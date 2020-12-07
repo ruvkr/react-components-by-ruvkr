@@ -16,7 +16,7 @@ export function Pan(target?: HTMLElement | Window | null) {
   // configs
   let panDirection: Directions = Directions.Horizontal;
   let callback: (data: MoveData | EndData) => void = () => {};
-  let test: (data: Touch) => boolean = () => true;
+  let startTest: (data: Touch) => boolean = () => true;
 
   // states
   let touchOrigin: Touch;
@@ -28,7 +28,7 @@ export function Pan(target?: HTMLElement | Window | null) {
   function startfunc(event: Event | TouchEvent | MouseEvent): void {
     const touch = getOrigin(event as TouchEvent | MouseEvent);
 
-    if (test(touch)) {
+    if (startTest(touch)) {
       // set properties for calculations
       touchOrigin = touch;
       touchPrev = touch;
@@ -48,6 +48,7 @@ export function Pan(target?: HTMLElement | Window | null) {
 
   function movefunc(event: TouchEvent | MouseEvent): void {
     const touch = getOrigin(event);
+    const delta = getDelta(touchPrev, touch);
 
     if (panning || testDirection(panDirection, touchPrev, touch)) {
       if (event.cancelable) event.preventDefault();
@@ -62,6 +63,8 @@ export function Pan(target?: HTMLElement | Window | null) {
         oy: touchOrigin.y,
         x: touch.x,
         y: touch.y,
+        dx: delta.dx,
+        dy: delta.dy,
         final: false,
       });
     } else {
@@ -74,6 +77,7 @@ export function Pan(target?: HTMLElement | Window | null) {
   function endfunc(event: TouchEvent | MouseEvent): void {
     if (panning) {
       const touch = getOrigin(event);
+      const delta = getDelta(touchPrev, touch);
       const lastTouch = touches[touches.length - 5] || touches[0];
       const { direction, angle } = getDirection(lastTouch, touch);
 
@@ -82,6 +86,8 @@ export function Pan(target?: HTMLElement | Window | null) {
         oy: touchOrigin.y,
         x: touch.x,
         y: touch.y,
+        dx: delta.dx,
+        dy: delta.dy,
         vx: velocity.vx,
         vy: velocity.vy,
         direction: direction,
@@ -109,7 +115,7 @@ export function Pan(target?: HTMLElement | Window | null) {
       // configs
       if (panConfig.panDirection != null) panDirection = panConfig.panDirection;
       if (panConfig.callback) callback = panConfig.callback;
-      if (panConfig.test) test = panConfig.test;
+      if (panConfig.startTest) startTest = panConfig.startTest;
 
       // listeners
       targetElement.addEventListener('mousedown', startfunc);
@@ -139,7 +145,7 @@ export function Pan(target?: HTMLElement | Window | null) {
   function update(panConfig: Partial<PanConfig>) {
     if (panConfig.panDirection != null) panDirection = panConfig.panDirection;
     if (panConfig.callback) callback = panConfig.callback;
-    if (panConfig.test) test = panConfig.test;
+    if (panConfig.startTest) startTest = panConfig.startTest;
     return pan;
   }
 
@@ -177,6 +183,13 @@ function getDirection(
   if (angle > 0.75 * Math.PI) direction = Directions.Left;
 
   return { direction, angle };
+}
+
+function getDelta(
+  { x: sx = 0, y: sy = 0 }: Touch = {} as Touch,
+  { x: ex = 0, y: ey = 0 }: Touch = {} as Touch
+): { dx: number; dy: number } {
+  return { dx: ex - sx, dy: ey - sy };
 }
 
 function getVelocity(
