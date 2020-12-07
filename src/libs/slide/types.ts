@@ -4,7 +4,7 @@ export interface SlideConfig {
   direction: Directions;
   translate: number;
   startBoundary?: [number, number];
-  constrain?: [number, number];
+  constraint?: [number, number];
   stiffness?: number;
   damping?: number;
   finalizeTest?: (data: {

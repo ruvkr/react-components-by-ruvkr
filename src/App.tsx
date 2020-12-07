@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { callers } from './hooks/useOutsideClick';
 import { Home } from './containers/Home/Home';
 
-const App: React.FC = () => {
+export const App: React.FC = () => {
   return (
     <ScApp {...callers}>
       <Home />
@@ -20,5 +20,3 @@ const ScApp = styled.div`
   bottom: 0;
   left: 0;
 `;
-
-export default App;

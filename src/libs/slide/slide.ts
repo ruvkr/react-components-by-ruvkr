@@ -93,10 +93,10 @@ export function Slide({
     let value = valueRaw;
     let edge = false;
 
-    if (openConfig.constrain) {
-      const constrainVal = getConstrainValue(valueRaw, openConfig.constrain);
-      value = constrainVal.value;
-      edge = constrainVal.edge;
+    if (openConfig.constraint) {
+      const constraintVal = getConstraintValue(valueRaw, openConfig.constraint);
+      value = constraintVal.value;
+      edge = constraintVal.edge;
     }
 
     if (data.final) {
@@ -129,10 +129,10 @@ export function Slide({
     let value = valueRaw;
     let edge = false;
 
-    if (closeConfig.constrain) {
-      const constrainVal = getConstrainValue(valueRaw, closeConfig.constrain);
-      value = constrainVal.value;
-      edge = constrainVal.edge;
+    if (closeConfig.constraint) {
+      const constraintVal = getConstraintValue(valueRaw, closeConfig.constraint);
+      value = constraintVal.value;
+      edge = constraintVal.edge;
     }
 
     if (data.final) {
@@ -239,7 +239,7 @@ export function Slide({
   return slide;
 }
 
-function getConstrainValue(
+function getConstraintValue(
   value: number,
   [min, max]: [min: number, max: number]
 ): { value: number; edge: boolean } {

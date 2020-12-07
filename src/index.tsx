@@ -1,17 +1,17 @@
-import React from 'react';
+import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import { App } from './App';
 import reportWebVitals from './reportWebVitals';
 import * as theme from './configs/themes';
 import { ThemeProvider } from 'styled-components';
 
 const app = (
-  <React.StrictMode>
+  <StrictMode>
     <ThemeProvider theme={theme}>
       <App />
     </ThemeProvider>
-  </React.StrictMode>
+  </StrictMode>
 );
 
 ReactDOM.render(app, document.getElementById('root'));
