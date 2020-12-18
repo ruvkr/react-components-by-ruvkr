@@ -32,6 +32,7 @@ export const Controls: React.FC<Props> = ({ controls }) => {
 
 const ScContainer = styled.div`
   display: flex;
+  position: relative;
 `;
 
 const ScBg = styled(motion.div)`
