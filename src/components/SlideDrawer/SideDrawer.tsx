@@ -83,21 +83,16 @@ const ScSideDrawer = styled(motion.div)`
   transform: translateX(-100%);
   background-color: ${props => props.theme.col5};
   z-index: 100;
-  display: flex;
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
 
   &::before {
     content: '';
     position: absolute;
-    width: 10000px;
+    width: 100%;
     height: 100%;
     top: 0;
-    bottom: 0;
-    left: -11000px;
+    left: -99%;
     background-color: ${props => props.theme.col5};
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 1000px;
   }
 
   @media (min-width: 480px) {

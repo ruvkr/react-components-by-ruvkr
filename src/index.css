@@ -30,3 +30,19 @@ code {
   -ms-user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
+
+@media (min-width: 480px) {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: none;
+  }
+}
