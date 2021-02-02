@@ -1,15 +1,12 @@
 import styled from 'styled-components';
 import { rgba } from 'polished';
 import { motion } from 'framer-motion';
-
 import { Menu } from '../../components/Menu';
 import { menuItems } from './sample_items';
-import { SideDrawer } from '../../components/SlideDrawer';
 
 export const Home: React.FC = () => {
   return (
     <ScContainer>
-      <SideDrawer />
       <ScDragable drag dragMomentum={false}>
         <Menu items={menuItems} />
       </ScDragable>

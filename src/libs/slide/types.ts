@@ -17,6 +17,7 @@ export interface SlideConfig {
 }
 
 export interface SlideInitConfig {
+  target: HTMLElement;
   configFunction: ConfigFunction;
   onClose?: () => void;
   onOpen?: () => void;

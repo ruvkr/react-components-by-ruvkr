@@ -21,6 +21,7 @@ type Config = SlideConfig & (HorizontalVariables | VerticalVariables);
 export type SlideInterface = ReturnType<typeof Slide>;
 
 export function Slide({
+  target,
   configFunction,
   onClose = () => {},
   onOpen = () => {},
@@ -38,7 +39,7 @@ export function Slide({
   let distance: number;
   let currentValue: number;
 
-  const pan = Pan();
+  const pan = Pan(target);
   const spring = Spring({
     onUpdate: springUpdateHandler,
     onComplete: springCompleteHandler,

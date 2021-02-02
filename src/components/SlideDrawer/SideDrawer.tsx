@@ -1,30 +1,33 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { motion, useMotionValue } from 'framer-motion';
-
 import { useSlide } from '../../hooks';
 import { SlideInitConfig, ConfigFunction } from '../../libs/slide';
 import { Directions } from '../../libs/pan';
-
 import { TogglerButton } from './TogglerButton';
 import { Backdrop } from './Backdrop';
 import { SDContent } from './content/SDContent';
 
 const initialX = window.innerWidth < 480 ? -window.innerWidth * 0.8 : -320;
 
-export const SideDrawer: React.FC = () => {
+interface Props {
+  appRef: React.MutableRefObject<HTMLElement | null>;
+}
+
+export const SideDrawer: React.FC<Props> = ({ appRef }) => {
   const [opened, setOpened] = useState(false);
   const x = useMotionValue<number>(initialX);
   const progress = useMotionValue<number>(0);
 
-  const openHandler = () => !opened && setOpened(true);
-  const closeHandler = () => opened && setOpened(false);
+  const openHandler = () => setOpened(true);
+  const closeHandler = () => setOpened(false);
   const updateHandler: SlideInitConfig['onUpdate'] = data => {
     x.set(data.value);
     progress.set(data.progress);
   };
 
   const { toggle } = useSlide({
+    target: appRef,
     configFunction,
     opened,
     onUpdate: updateHandler,

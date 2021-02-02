@@ -1,10 +1,15 @@
+import { useRef } from 'react';
 import styled from 'styled-components';
 import { Home } from './containers/Home/Home';
+import { SideDrawer } from './components/SlideDrawer';
 
 export const App: React.FC = () => {
+  const appRef = useRef<HTMLDivElement>(null);
+
   return (
-    <ScApp>
+    <ScApp ref={appRef}>
       <Home />
+      <SideDrawer appRef={appRef} />
     </ScApp>
   );
 };
