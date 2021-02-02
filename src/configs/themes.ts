@@ -1,5 +1,5 @@
 export const col1 = '#eeeeee';
-export const col2 = '#00adb5';
+export const col2 = '#0088aa';
 export const col3 = '#393e46';
 export const col4 = '#222831';
 export const col5 = '#1b2028';

@@ -1,8 +1,7 @@
-import { useRef, useReducer, useCallback } from 'react';
+import { useRef, useReducer } from 'react';
 import styled from 'styled-components';
 import { rgba } from 'polished';
-import { motion } from 'framer-motion';
-import { useOutsideClick } from '../../hooks';
+import { motion, AnimatePresence } from 'framer-motion';
 import { MenuItem, ControlItem } from './types';
 import {
   EllipsisHorizontal,
@@ -19,6 +18,7 @@ interface Props {
   icon?: JSX.Element;
   togglerIcon?: JSX.Element;
   items?: MenuItem[];
+  hideOnClick?: boolean;
 }
 
 interface State {
@@ -26,8 +26,6 @@ interface State {
   prevItems: MenuItem[][];
   forwardItems: MenuItem[][];
   show: boolean;
-  mount: boolean;
-  delayDirection: 1 | -1;
 }
 
 export const Menu: React.FC<Props> = ({
@@ -36,42 +34,29 @@ export const Menu: React.FC<Props> = ({
   disabled = false,
   togglerIcon = <EllipsisHorizontal />,
   items = [],
+  hideOnClick = true,
 }) => {
   const [state, dispatch] = useReducer(reducer, {
     activeItems: items,
     prevItems: [],
     forwardItems: [],
     show: false,
-    mount: false,
-    delayDirection: 1,
   });
 
-  const {
-    activeItems,
-    prevItems,
-    forwardItems,
-    show,
-    mount,
-    delayDirection,
-  } = state;
+  const { activeItems, prevItems, forwardItems, show } = state;
+  const togglerRef = useRef<HTMLButtonElement>(null);
+  const delayDirection = useRef<1 | -1>(1);
 
   const togglerShow = () => {
-    if (!disabled && items.length > 0) {
-      if (!show && !mount) dispatch({ mount: true });
-      else if (show) dispatch({ show: false });
-    }
-  };
-
-  const mountHandler = () => {
-    if (!show) {
+    if (disabled || items.length === 0) return;
+    if (show) {
       dispatch({
-        mount: false,
+        show: false,
         activeItems: items,
-        delayDirection: 1,
         prevItems: [],
         forwardItems: [],
       });
-    }
+    } else dispatch({ show: true });
   };
 
   const subActiveHandler = (items: MenuItem[]) => {
@@ -100,16 +85,6 @@ export const Menu: React.FC<Props> = ({
     });
   };
 
-  const getDelayDirection = useCallback(direction => {
-    dispatch({
-      show: true,
-      delayDirection: direction,
-    });
-  }, []);
-
-  const togglerRef = useRef(null);
-  const listeners = useOutsideClick(show, togglerShow);
-
   const control_items: ControlItem[] = [
     {
       id: 'back',
@@ -131,7 +106,7 @@ export const Menu: React.FC<Props> = ({
   ];
 
   return (
-    <ScContainer {...listeners}>
+    <ScContainer>
       <ScToggler ref={togglerRef} disabled={disabled} onClick={togglerShow}>
         <ScFocus tabIndex={-1}>
           {icon && <ScMenuIcon>{icon}</ScMenuIcon>}
@@ -141,22 +116,24 @@ export const Menu: React.FC<Props> = ({
           </ScTogglerIcon>
         </ScFocus>
       </ScToggler>
-      {mount && (
-        <Container
-          show={show}
-          togglerRef={togglerRef}
-          onAnimationComplete={mountHandler}
-          getDelayDirection={getDelayDirection}
-        >
-          <Items
-            show={show}
-            items={activeItems}
-            controlItems={control_items}
-            onSubActive={subActiveHandler}
-            delayDirection={delayDirection}
-          />
-        </Container>
-      )}
+
+      <AnimatePresence>
+        {show && (
+          <ScItemsContainer
+            togglerRef={togglerRef}
+            setDelayDirection={delayDirection}
+            onOutsideClick={togglerShow}
+          >
+            <Items
+              items={activeItems}
+              controlItems={control_items}
+              onSubActive={subActiveHandler}
+              getDelayDirection={delayDirection}
+              onClick={() => hideOnClick && togglerShow()}
+            />
+          </ScItemsContainer>
+        )}
+      </AnimatePresence>
     </ScContainer>
   );
 };
@@ -168,6 +145,10 @@ const reducer = (state: State, payload: Partial<State>): State => ({
 
 const ScContainer = styled.div`
   display: inline-flex;
+`;
+
+const ScItemsContainer = styled(Container)`
+  color: ${p => rgba(p.theme.col1, 0.5)};
 `;
 
 const ScToggler = styled.button`

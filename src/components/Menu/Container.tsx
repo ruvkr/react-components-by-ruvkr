@@ -6,18 +6,20 @@ import { motion } from 'framer-motion';
 import { usePosition, PositionData } from '../../hooks/usePosition';
 
 interface Props {
-  show: boolean;
   togglerRef: React.MutableRefObject<HTMLElement | null>;
-  onAnimationComplete: () => void;
-  getDelayDirection: (direction: 1 | -1) => void;
+  setDelayDirection: React.MutableRefObject<1 | -1>;
+  className?: string;
+  onOutsideClick?: (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => void;
 }
 
 export const Container: React.FC<Props> = ({
   children,
-  show,
   togglerRef,
-  onAnimationComplete,
-  getDelayDirection,
+  setDelayDirection,
+  onOutsideClick,
+  className,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const position = useRef<PositionData | null>(null);
@@ -25,43 +27,57 @@ export const Container: React.FC<Props> = ({
   usePosition(togglerRef, containerRef, data => (position.current = data));
 
   useLayoutEffect(() => {
-    if (position.current && containerRef.current) {
-      const {
-        left,
-        right,
-        top,
-        bottom,
-        transformOriginX,
-        transformOriginY,
-      } = position.current;
+    if (!position.current || !containerRef.current) return;
+    const {
+      left,
+      right,
+      top,
+      bottom,
+      transformOriginX,
+      transformOriginY,
+    } = position.current;
+    const container = containerRef.current;
 
-      if (left) containerRef.current.style.left = left + 'px';
-      else containerRef.current.style.right = right + 'px';
+    // set transform origin
+    container.style.transformOrigin = `${transformOriginX} ${transformOriginY}`;
 
-      if (top) {
-        containerRef.current.style.top = top + 'px';
-        getDelayDirection(1);
-      } else {
-        containerRef.current.style.bottom = bottom + 'px';
-        getDelayDirection(-1);
-      }
+    // set left or right
+    if (left != null) container.style.left = left + 'px';
+    else container.style.right = right + 'px';
 
-      containerRef.current.style.transformOrigin =
-        transformOriginX + ' ' + transformOriginY;
+    // set top or bottom
+    if (top != null) {
+      container.style.top = top + 'px';
+      setDelayDirection.current = 1;
+    } else {
+      container.style.bottom = bottom + 'px';
+      setDelayDirection.current = -1;
     }
-  }, [getDelayDirection]);
+  }, [setDelayDirection]);
 
   return createPortal(
-    <ScContainer
-      ref={containerRef}
-      initial={{ opacity: 0, scale: 0 }}
-      animate={show ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
-      transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
-      onAnimationComplete={onAnimationComplete}
-    >
-      <ScBackground layout />
-      <ScItems>{children}</ScItems>
-    </ScContainer>,
+    <>
+      <ScBackdrop
+        key='menu-backdrop'
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
+        onClick={onOutsideClick}
+      />
+      <ScContainer
+        key='menu-container'
+        ref={containerRef}
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0 }}
+        transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
+        className={className}
+      >
+        <ScBackground layout />
+        <ScItems>{children}</ScItems>
+      </ScContainer>
+    </>,
     document.body
   );
 };
@@ -69,6 +85,17 @@ export const Container: React.FC<Props> = ({
 const ScContainer = styled(motion.div)`
   position: fixed;
   z-index: 900;
+`;
+
+const ScBackdrop = styled(motion.div)`
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 899;
+  overflow: hidden;
 `;
 
 const ScBackground = styled(motion.div)`
