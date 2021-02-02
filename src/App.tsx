@@ -1,10 +1,9 @@
 import styled from 'styled-components';
-import { callers } from './hooks/useOutsideClick';
 import { Home } from './containers/Home/Home';
 
 export const App: React.FC = () => {
   return (
-    <ScApp {...callers}>
+    <ScApp>
       <Home />
     </ScApp>
   );
