@@ -1,7 +1,6 @@
 import { useRef, useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
-import { rgba } from 'polished';
 import { motion } from 'framer-motion';
 import { usePosition, PositionData } from '../../hooks/usePosition';
 
@@ -57,14 +56,7 @@ export const Container: React.FC<Props> = ({
 
   return createPortal(
     <>
-      <ScBackdrop
-        key='menu-backdrop'
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
-        onClick={onOutsideClick}
-      />
+      <ScBackdrop key='menu-backdrop' onClick={onOutsideClick} />
       <ScContainer
         key='menu-container'
         ref={containerRef}
@@ -87,13 +79,13 @@ const ScContainer = styled(motion.div)`
   z-index: 900;
 `;
 
-const ScBackdrop = styled(motion.div)`
+const ScBackdrop = styled.div`
   position: fixed;
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.2);
+  background: none;
   z-index: 899;
   overflow: hidden;
 `;
@@ -109,7 +101,7 @@ const ScBackground = styled(motion.div)`
   right: 0;
   bottom: 0;
   z-index: -1;
-  box-shadow: 0 0 8px ${rgba('#000', 0.2)};
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
 `;
 
 const ScItems = styled.div``;
