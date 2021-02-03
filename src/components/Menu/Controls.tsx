@@ -6,9 +6,10 @@ import { ControlItem } from './types';
 
 interface Props {
   controls: ControlItem[];
+  className?: string;
 }
 
-export const Controls: React.FC<Props> = ({ controls }) => {
+export const Controls: React.FC<Props> = ({ controls, className }) => {
   const _controls = controls.map((item, index) => (
     <ScControlItem
       key={item.id}
@@ -23,7 +24,7 @@ export const Controls: React.FC<Props> = ({ controls }) => {
   ));
 
   return (
-    <ScContainer>
+    <ScContainer className={className}>
       <ScBg layout />
       {_controls}
     </ScContainer>
@@ -44,9 +45,7 @@ const ScBg = styled(motion.div)`
   right: 0;
   bottom: 0;
   background-color: ${p => darken(0.01, p.theme.col5)};
-  border-radius: 0 0 8px 8px;
   z-index: -1;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
 `;
 
 const slidein = keyframes`

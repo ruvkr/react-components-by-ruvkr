@@ -29,7 +29,7 @@ export const Items: React.FC<Props> = ({
     items,
     isSubMenu,
     onClick: itemOnClick,
-  }: MenuItem) => {
+  }: MenuItem) => () => {
     if (disabled) return;
     isSubMenu && items && items.length > 0 && onSubActive(items);
     !isSubMenu && itemOnClick && itemOnClick();
@@ -39,11 +39,10 @@ export const Items: React.FC<Props> = ({
   const _items = items.map((item, index) => (
     <ScItem
       key={item.id}
-      onClick={() => clickHandler(item)}
+      onClick={clickHandler(item)}
       disabled={item.disabled}
       $delay={fromTop ? index * 50 + 100 : (items.length - index) * 50 + 100}
       $fromTop={fromTop}
-      $play={play}
     >
       <ScFocus tabIndex={-1}>
         <ScIcon $disabled={item.disabled}>{item.icon}</ScIcon>
@@ -58,43 +57,50 @@ export const Items: React.FC<Props> = ({
   ));
 
   return (
-    <ScContainer>
-      {_items}
-      <Controls controls={controlItems} />
+    <ScContainer $fromTop={fromTop}>
+      <ScControls $fromTop={fromTop} controls={controlItems} />
+      <ScItems $play={play} $fromTop={fromTop}>
+        {_items}
+      </ScItems>
     </ScContainer>
   );
 };
 
-const ScContainer = styled.div`
-  /* max-height: 80vh; */
-  /* max-width: 80vw; */
-  /* overflow: auto; */
+const ScContainer = styled.div<{ $fromTop: boolean }>`
+  display: flex;
+  flex-direction: ${p => (p.$fromTop ? 'column' : 'column-reverse')};
 `;
 
+const ScControls = styled(Controls)<{ $fromTop: boolean }>(
+  ({ $fromTop }) => css`
+    & > div {
+      border-radius: ${$fromTop ? '8px 8px 0 0' : '0 0 8px 8px'};
+      border-top: ${$fromTop ? 'none' : '1px solid rgba(0, 0, 0, 0.1)'};
+      border-bottom: ${$fromTop ? '1px solid rgba(0, 0, 0, 0.1)' : 'none'};
+    }
+  `
+);
+
+const ScItems = styled.div<{ $play: boolean; $fromTop: boolean }>(
+  ({ $play, $fromTop }) => css`
+    border-radius: ${$fromTop ? '0 0 8px 8px' : '8px 8px 0 0'};
+    animation-play-state: ${$play ? 'running' : 'paused'};
+    overflow: hidden;
+  `
+);
+
 const slidetop = keyframes`
-  0% {
-    opacity: 0;
-    transform: translateY(-10px); }
-  100% {
-    opacity: 1;
-    transform: none; }
+  0%   { opacity: 0; transform: translateY(-10px); }
+  100% { opacity: 1; transform: none;              }
 `;
 
 const slidebottom = keyframes`
-  0% {
-    opacity: 0;
-    transform: translateY(10px); }
-  100% {
-    opacity: 1;
-    transform: none; }
+  0%   { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: none;             }
 `;
 
-const ScItem = styled.button<{
-  $delay: number;
-  $play: boolean;
-  $fromTop: boolean;
-}>(
-  ({ $delay, $play, $fromTop, theme }) => css`
+const ScItem = styled.button<{ $delay: number; $fromTop: boolean }>(
+  ({ $delay, $fromTop, theme }) => css`
     width: 100%;
     font: inherit;
     border: none;
@@ -105,14 +111,14 @@ const ScItem = styled.button<{
     color: ${theme.col1};
     cursor: pointer;
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(${$fromTop ? -10 : 10}px);
     animation-delay: ${$delay}ms;
     animation-direction: normal;
     animation-duration: 300ms;
     animation-fill-mode: forwards;
     animation-iteration-count: 1;
     animation-name: ${$fromTop ? slidetop : slidebottom};
-    animation-play-state: ${$play ? 'running' : 'paused'};
+    animation-play-state: inherit;
     animation-timing-function: ease-in-out;
 
     &:focus,
@@ -125,11 +131,6 @@ const ScItem = styled.button<{
     }
     &:disabled {
       cursor: not-allowed;
-    }
-    &:first-of-type {
-      & > div {
-        border-radius: 8px 8px 0 0;
-      }
     }
     @media (hover: hover) and (pointer: fine) {
       &:hover:not(:disabled) {
