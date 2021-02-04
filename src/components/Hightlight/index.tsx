@@ -22,6 +22,7 @@ interface State {
   selecting: boolean;
   selectedId: string | null;
   selectedStyles: CSS.Properties<string> | null;
+  selectedNote: string | null;
   tagName: string;
   attributes: { [key: string]: string };
   styles: CSS.Properties<string>;
@@ -31,6 +32,7 @@ const initialState: State = {
   selecting: false,
   selectedId: null,
   selectedStyles: null,
+  selectedNote: null,
   tagName: 'span',
   attributes: { class: 'highlighted' },
   styles: { backgroundColor: '#fabc02', color: '#222831' },
@@ -45,6 +47,7 @@ export const Hightlight: React.FC<Props> = ({ readerRef }) => {
     attributes,
     styles,
     selectedStyles,
+    selectedNote,
   } = state;
 
   // console.log(state);
@@ -67,7 +70,7 @@ export const Hightlight: React.FC<Props> = ({ readerRef }) => {
     highlight,
     removeHighlight,
     updateStyle,
-    //
+    updateNote,
   } = useHighlightRange({
     readerRef,
     tagName,
@@ -111,7 +114,7 @@ export const Hightlight: React.FC<Props> = ({ readerRef }) => {
           disabled={selectedId === null}
         />
       ),
-      content: <Notes />,
+      content: <Notes note={selectedNote} updateNote={updateNote} />,
     },
     {
       id: 'dismiss',

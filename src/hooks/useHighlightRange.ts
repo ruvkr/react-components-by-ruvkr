@@ -14,6 +14,7 @@ export interface HighlightRangeConfigs {
     selecting?: boolean;
     selectedId?: string | null;
     selectedStyles?: CSS.Properties<string> | null;
+    selectedNote?: string | null;
   }) => void;
 }
 
@@ -32,6 +33,7 @@ export const useHighlightRange = ({
       selecting: (selectingRef.current = false),
       selectedId: (selectedIdRef.current = null),
       selectedStyles: null,
+      selectedNote: null,
     });
   };
 
@@ -43,6 +45,16 @@ export const useHighlightRange = ({
     for (let i = 0; i < nodes.length; i++) {
       const node = nodes[i] as HTMLElement;
       node.style.cssText = cssText;
+    }
+  };
+
+  const updateNote = (note: string) => {
+    if (!readerRef.current || !selectedIdRef.current) return;
+    const selector = `[highlightid="${selectedIdRef.current}"]`;
+    const nodes = readerRef.current.querySelectorAll(selector);
+    for (let i = 0; i < nodes.length; i++) {
+      const node = nodes[i] as HTMLElement;
+      node.setAttribute('highlightnote', note);
     }
   };
 
@@ -67,6 +79,7 @@ export const useHighlightRange = ({
       selecting: (selectingRef.current = false),
       selectedId: (selectedIdRef.current = null),
       selectedStyles: null,
+      selectedNote: null,
     });
   };
 
@@ -87,9 +100,11 @@ export const useHighlightRange = ({
         if (!highlightId || selectedIdRef.current === highlightId) return;
         const css = target.getAttribute('style');
         const styleObject = css ? convertStyle('toObject', css) : null;
+        const note = target.getAttribute('highlightnote');
         stateChangeCallback({
           selectedId: (selectedIdRef.current = highlightId),
           selectedStyles: styleObject,
+          selectedNote: note,
         });
       } else {
         const selection = window.getSelection();
@@ -100,6 +115,7 @@ export const useHighlightRange = ({
             selecting: (selectingRef.current = false),
             selectedId: (selectedIdRef.current = null),
             selectedStyles: null,
+            selectedNote: null,
           });
       }
     };
@@ -118,5 +134,6 @@ export const useHighlightRange = ({
     highlight,
     removeHighlight,
     updateStyle,
+    updateNote,
   };
 };

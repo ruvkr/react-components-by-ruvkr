@@ -4,8 +4,13 @@ import { rgba } from 'polished';
 import { Button } from '../Buttons';
 import { Checkmark, Remove } from '../../assets/icons/essentials';
 
-export const Notes: React.FC = () => {
-  const [value, setValue] = useState('');
+interface Props {
+  note: string | null;
+  updateNote: (note: string) => void;
+}
+
+export const Notes: React.FC<Props> = ({ note, updateNote }) => {
+  const [value, setValue] = useState(note ?? '');
 
   const changeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const target = event.target as HTMLTextAreaElement;
@@ -15,13 +20,27 @@ export const Notes: React.FC = () => {
     setValue(value);
   };
 
+  const removeHandler = () => {
+    setValue('');
+    updateNote('');
+  };
+
   return (
     <ScContainer>
-      <ScLabel children='Click to add or edit' />
-      <ScTextarea value={value} onChange={changeHandler} rows={4} />
+      <ScTextarea
+        placeholder='No notes'
+        value={value}
+        onChange={changeHandler}
+        rows={4}
+      />
       <ScControls>
-        <Button icon={<Checkmark />} name='Save' />
-        <Button icon={<Remove />} name='Delete' />
+        <Button
+          icon={<Checkmark />}
+          name='Save'
+          onClick={() => updateNote(value)}
+        />
+        <Button icon={<Remove />} name='Delete' onClick={removeHandler} />
+        <ScInfo children='Click above to add or edit' />
       </ScControls>
     </ScContainer>
   );
@@ -33,16 +52,16 @@ const ScContainer = styled.div`
   padding: 8px;
 `;
 
-const ScLabel = styled.label`
+const ScInfo = styled.label`
   font-size: 14px;
-  color: ${p => rgba(p.theme.col1, 0.5)};
+  text-align: right;
+  color: ${p => p.theme.col3};
 `;
 
 const ScControls = styled.div`
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
-  justify-content: center;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
   grid-gap: 8px;
 `;
 
@@ -53,7 +72,7 @@ const ScTextarea = styled.textarea(
     border-radius: 4px;
     padding: 0.5em;
     margin: 0;
-    background-color: ${theme.col4};
+    background-color: transparent;
     color: ${rgba(theme.col1, 0.5)};
     resize: none;
     transition: all 300ms ease-in-out;
@@ -70,6 +89,9 @@ const ScTextarea = styled.textarea(
     }
     &::selection {
       background-color: ${theme.col2};
+    }
+    ::placeholder {
+      color: ${p => p.theme.col3};
     }
   `
 );
