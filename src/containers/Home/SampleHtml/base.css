@@ -1,0 +1,181 @@
+#sample_html {
+  background-color: var(--col4);
+  color: var(--col1);
+  font-family: var(--doc-font);
+  font-size: var(--doc-font-size);
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 16px;
+  overflow-x: hidden;
+  background: inherit;
+  tab-size: 4; }
+  #sample_html a {
+    color: var(--col2);
+    cursor: pointer;
+    word-break: break-all; }
+    #sample_html a:hover, #sample_html a:active {
+      outline: none; }
+  #sample_html hr {
+    height: 1px;
+    background-color: var(--col3);
+    border: none; }
+  #sample_html h1,
+  #sample_html h2,
+  #sample_html h3,
+  #sample_html h4,
+  #sample_html h5,
+  #sample_html h6 {
+    width: inherit;
+    page-break-after: avoid;
+    break-after: avoid-page;
+    page-break-inside: avoid;
+    orphans: 4;
+    margin: 1em 0; }
+  #sample_html h1 {
+    font-size: 2em; }
+  #sample_html h2 {
+    font-size: 1.8em; }
+  #sample_html h3 {
+    font-size: 1.6em; }
+  #sample_html h4 {
+    font-size: 1.4em; }
+  #sample_html h5 {
+    font-size: 1.2em; }
+  #sample_html h6 {
+    font-size: 1em; }
+  #sample_html p {
+    width: inherit;
+    line-height: inherit;
+    orphans: 4;
+    margin-top: 1em;
+    margin-bottom: 1em; }
+  #sample_html img {
+    margin: 0.5em 0;
+    max-width: 100%;
+    vertical-align: middle;
+    image-orientation: from-image;
+    background-color: var(--col1); }
+  #sample_html button,
+  #sample_html select,
+  #sample_html textarea {
+    color: inherit;
+    font: inherit; }
+  #sample_html input {
+    color: inherit;
+    font: inherit; }
+    #sample_html input[type='checkbox'], #sample_html input[type='radio'] {
+      line-height: normal;
+      padding: 0; }
+    #sample_html input[type='checkbox'] {
+      cursor: pointer;
+      width: inherit;
+      height: inherit; }
+  #sample_html ol,
+  #sample_html ul {
+    margin: 0;
+    padding-left: 2em; }
+  #sample_html li {
+    margin: 0 0 1em 0; }
+    #sample_html li:first-child {
+      margin-top: 1em; }
+    #sample_html li p {
+      margin: 0 0 0.5em 0; }
+    #sample_html li blockquote {
+      margin: 1em 0; }
+  #sample_html figure {
+    max-width: 100%;
+    overflow-x: auto;
+    margin: 0;
+    padding: 0; }
+  #sample_html table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    overflow: auto;
+    page-break-inside: auto;
+    text-align: left; }
+    #sample_html table tr {
+      page-break-inside: avoid;
+      page-break-after: auto; }
+      #sample_html table tr:nth-child(2n) {
+        background-color: rgba(0, 0, 0, 0.1); }
+      #sample_html table tr th {
+        background-color: rgba(0, 0, 0, 0.1);
+        padding: 1em; }
+      #sample_html table tr td {
+        padding: 1em; }
+    #sample_html table thead {
+      display: table-header-group; }
+  #sample_html dl {
+    margin: 1em 0; }
+    #sample_html dl dt {
+      margin: 1em 0;
+      font-weight: bold; }
+    #sample_html dl dd {
+      margin: 1em 0; }
+  #sample_html blockquote {
+    margin: 1em 0; }
+    #sample_html blockquote:first-child {
+      margin-top: 0; }
+    #sample_html blockquote:last-child {
+      margin-bottom: 0; }
+  #sample_html pre {
+    width: inherit;
+    white-space: pre-wrap; }
+    #sample_html pre code {
+      display: block;
+      font-weight: normal;
+      color: var(--col1);
+      background-color: var(--col5);
+      overflow: auto;
+      padding: 1em;
+      white-space: pre;
+      border-radius: 0.5em; }
+  #sample_html code,
+  #sample_html pre,
+  #sample_html samp,
+  #sample_html tt {
+    font-family: var(--code-font);
+    font-size: var(--code-font-size); }
+  #sample_html code {
+    font-weight: 300;
+    color: var(--col2);
+    border-radius: 0.25em;
+    text-align: left;
+    vertical-align: initial; }
+  #sample_html kbd {
+    margin: 0 0.1em;
+    padding: 0.1em 0.6em;
+    font-size: 0.8em;
+    color: #242729;
+    background: #fff;
+    border: 1px solid #adb3b9;
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(12, 13, 14, 0.2), 0 0 0 2px #fff inset;
+    white-space: nowrap;
+    vertical-align: middle; }
+  #sample_html video {
+    max-width: 100%;
+    display: block;
+    margin: 0 auto; }
+  #sample_html iframe {
+    width: 100%;
+    border: none;
+    margin: auto; }
+  #sample_html mark {
+    background: var(--col2);
+    color: var(--col4);
+    padding: 0.1em 0.25em;
+    border-radius: 0.25em; }
+  #sample_html .footnotes {
+    column-count: 2;
+    font-size: 0.9em; }
+    #sample_html .footnotes .footnotes-list {
+      margin: 0; }
+      #sample_html .footnotes .footnotes-list .footnote-item {
+        margin: 0 0 1em 0; }
+  #sample_html .highlighted {
+    background-color: #0088aa;
+    color: white;
+    padding: 0.3em 0;
+    cursor: pointer; }

@@ -1,12 +1,26 @@
+import { useState } from 'react';
 import styled from 'styled-components';
 import { rgba } from 'polished';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Menu } from '../../components/Menu';
+import { Button } from '../../components/Buttons';
+import { SampleHtml } from './SampleHtml';
 import { menuItems } from './sample_items';
+import { Document } from '../../assets/icons/essentials';
 
 export const Home: React.FC = () => {
+  const [show, setShow] = useState(false);
+
   return (
     <ScContainer>
+      <AnimatePresence>
+        {show && <SampleHtml onClose={() => setShow(false)} />}
+      </AnimatePresence>
+      <ScButton
+        name='Load Sample'
+        icon={<Document />}
+        onClick={() => setShow(true)}
+      />
       <ScDragable drag dragMomentum={false}>
         <Menu items={menuItems} />
       </ScDragable>
@@ -23,6 +37,10 @@ const ScContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+const ScButton = styled(Button)`
+  background-color: ${p => p.theme.col5};
 `;
 
 const ScDragable = styled(motion.div)`

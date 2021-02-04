@@ -4,6 +4,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
 
 :root {
+  --col1: #888888;
+  --col2: #0088aa;
+  --col3: #393e46;
+  --col4: #222831;
+  --col5: #1b2028;
+  --col6: #48b14c;
+  --col7: #fed219;
+  --col8: #f78828;
+  --col9: #fa5456;
+
+  --doc-font: sans-serif;
+  --doc-font-size: 14px;
+  --code-font: monospace;
+  --code-font-size: 14px;
   --monospace: 'Roboto Mono', monospace;
 }
 
@@ -19,15 +33,11 @@ body {
   overscroll-behavior: none;
 }
 
-code {
-  font-family: 'Roboto Mono', monospace;
-}
-
-* {
+*,
+::after,
+::before {
   box-sizing: border-box;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
+  user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
 

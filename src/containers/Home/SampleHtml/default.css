@@ -1,0 +1,74 @@
+#sample_html {
+  line-height: 1.7;
+  max-width: 51em;
+  margin: auto; }
+  #sample_html blockquote {
+    padding: 0.5em 2em;
+    border-left: 3px solid var(--col2);
+    background-color: var(--col5);
+    border-radius: 0 0.5em 0.5em 0;
+    box-shadow: 0 0 1em rgba(0, 0, 0, 0.2);
+    position: relative; }
+    #sample_html blockquote::before {
+      position: absolute;
+      top: -8px;
+      left: 8px;
+      font-family: serif;
+      content: '\201C';
+      color: var(--col2);
+      font-size: 3em; }
+  #sample_html table {
+    background-color: var(--col5);
+    border-radius: 0.5em;
+    overflow: hidden;
+    box-shadow: 0 0 1em rgba(0, 0, 0, 0.2); }
+  #sample_html h1 {
+    text-align: center;
+    padding-bottom: 0.3em;
+    font-size: 2.25em;
+    margin: 1em auto 1.2em;
+    font-weight: 300; }
+    #sample_html h1::after {
+      border-bottom: 2px dashed var(--col2);
+      content: '';
+      width: 100px;
+      display: block;
+      margin: 0.2em auto 0; }
+  #sample_html h2 {
+    padding-left: 0.25em;
+    border-left: 3px solid var(--col2); }
+  #sample_html h3::before {
+    background-color: var(--col2);
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 0.18em;
+    margin-right: 0.5em; }
+  #sample_html h4::before {
+    background-color: var(--col2);
+    content: '';
+    width: 6px;
+    height: 2px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 0.18em;
+    margin-right: 0.5em; }
+  #sample_html h6 {
+    color: var(--col2); }
+  #sample_html pre code {
+    box-shadow: 0 0 1em rgba(0, 0, 0, 0.2); }
+  #sample_html img {
+    border-radius: 0.5em;
+    box-shadow: 0 0 1em rgba(0, 0, 0, 0.2); }
+  #sample_html .footnotes-sep {
+    display: none; }
+  #sample_html .footnotes {
+    background-color: var(--col5);
+    padding: 1em 1em 1em 0;
+    border-radius: 0.5em;
+    box-shadow: 0 0 1em rgba(0, 0, 0, 0.2); }
+  #sample_html ::marker {
+    color: var(--col2); }

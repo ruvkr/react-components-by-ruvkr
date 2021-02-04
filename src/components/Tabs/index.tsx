@@ -67,7 +67,7 @@ export const Tabs: React.FC<Props> = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setActive(-1)}
-              transition={tweenslow}
+              transition={tweenfast}
             />
           )}
         </AnimatePresence>
@@ -83,7 +83,7 @@ export const Tabs: React.FC<Props> = ({
           <ScBackground
             layoutId='tab-bg'
             layout='position'
-            transition={tweenslow}
+            transition={tweenfast}
           />
           <AnimatePresence exitBeforeEnter>
             {active > -1 && (
@@ -105,19 +105,19 @@ export const Tabs: React.FC<Props> = ({
   );
 };
 
-const tweenfast: Transition = { type: 'tween', duration: 0.15 };
-const tweenslow: Transition = { type: 'tween', duration: 0.3 };
+const tweenslow: Transition = { type: 'tween', duration: 0.5 };
+const tweenfast: Transition = { type: 'tween', duration: 0.3 };
 
 const containerVariants: Variants = {
-  hide: { y: '100%', opacity: 0, transition: tweenslow },
-  show: { y: '0%', opacity: 1, transition: tweenslow },
+  hide: { y: '100%', opacity: 0, transition: tweenfast },
+  show: { y: '0%', opacity: 1, transition: tweenfast },
 };
 
 const contentVariants: Variants = {
-  hide: { opacity: 0, transition: tweenfast },
+  hide: { opacity: 0, transition: tweenslow },
   show: (prev: number) => ({
     opacity: 1,
-    transition: { ...tweenfast, delay: prev > -1 ? 0 : 0.3 },
+    transition: { ...tweenslow, delay: prev > -1 ? 0 : 0.3 },
   }),
 };
 
@@ -148,6 +148,7 @@ const ScTabs = styled.div`
 const ScContent = styled(motion.div)`
   width: 100%;
   z-index: 1;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 `;
 
 const ScBackground = styled(motion.div)`
