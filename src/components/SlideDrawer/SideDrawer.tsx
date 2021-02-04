@@ -56,8 +56,8 @@ const configFunction: ConfigFunction = () => {
       startBoundary: mobile ? [0, 0.1 * width] : [0, 64],
       finalizeTest: ({ direction }) => direction === Directions.Right,
       constraint: mobile ? [-0.8 * width, 0.2 * width] : [-320, 128],
-      stiffness: 400,
-      damping: 20,
+      stiffness: 300,
+      damping: 33,
     },
     close: {
       direction: Directions.Horizontal,
@@ -65,8 +65,8 @@ const configFunction: ConfigFunction = () => {
       startBoundary: mobile ? [0, 1 * width] : [0, 360],
       finalizeTest: ({ direction }) => direction === Directions.Left,
       constraint: mobile ? [-0.8 * width, 0.2 * width] : [-320, 128],
-      stiffness: 400,
-      damping: 40,
+      stiffness: 300,
+      damping: 33,
     },
   };
 };

@@ -67,7 +67,7 @@ export const Tabs: React.FC<Props> = ({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setActive(-1)}
-              transition={tweenfast}
+              transition={transition}
             />
           )}
         </AnimatePresence>
@@ -83,7 +83,7 @@ export const Tabs: React.FC<Props> = ({
           <ScBackground
             layoutId='tab-bg'
             layout='position'
-            transition={tweenfast}
+            transition={transition}
           />
           <AnimatePresence exitBeforeEnter>
             {active > -1 && (
@@ -105,19 +105,18 @@ export const Tabs: React.FC<Props> = ({
   );
 };
 
-const tweenslow: Transition = { type: 'tween', duration: 0.5 };
-const tweenfast: Transition = { type: 'tween', duration: 0.3 };
+const transition: Transition = { type: 'spring', stiffness: 300, damping: 33 };
 
 const containerVariants: Variants = {
-  hide: { y: '100%', opacity: 0, transition: tweenfast },
-  show: { y: '0%', opacity: 1, transition: tweenfast },
+  hide: { y: '100%', opacity: 0, transition: transition },
+  show: { y: '0%', opacity: 1, transition: transition },
 };
 
 const contentVariants: Variants = {
-  hide: { opacity: 0, transition: tweenslow },
+  hide: { opacity: 0, transition: transition },
   show: (prev: number) => ({
     opacity: 1,
-    transition: { ...tweenslow, delay: prev > -1 ? 0 : 0.3 },
+    transition: { ...transition, delay: prev > -1 ? 0 : 0.3 },
   }),
 };
 

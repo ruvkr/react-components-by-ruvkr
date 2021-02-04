@@ -33,7 +33,7 @@ const initialState: State = {
   selectedStyles: null,
   tagName: 'span',
   attributes: { class: 'highlighted' },
-  styles: { backgroundColor: '#0088aa', color: '#eeeeee' },
+  styles: { backgroundColor: '#fabc02', color: '#222831' },
 };
 
 export const Hightlight: React.FC<Props> = ({ readerRef }) => {

@@ -56,3 +56,8 @@ body {
     background: none;
   }
 }
+
+::selection {
+  background-color: var(--col1);
+  color: var(--col4);
+}
