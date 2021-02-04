@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { useWindowResize } from './useWindowResize';
 import { Slide, SlideInitConfig, SlideInterface } from '../libs/slide';
 
@@ -33,7 +33,12 @@ export function useSlide({
     slide.current.isOpened() !== opened && slide.current.toggle();
   }, [opened]);
 
-  useWindowResize(slide.current?.refresh, 100);
+  const resizeHandler = useCallback(() => {
+    if (!slide.current) return;
+    slide.current.refresh();
+  }, []);
+
+  useWindowResize(resizeHandler, 100);
 
   return { toggle: () => slide.current?.toggle() };
 }
