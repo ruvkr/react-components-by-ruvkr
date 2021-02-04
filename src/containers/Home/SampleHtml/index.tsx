@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { rgba } from 'polished';
@@ -15,7 +15,19 @@ interface Props {
 }
 
 export const SampleHtml: React.FC<Props> = ({ onClose }) => {
+  const [html, setHtml] = useState('');
   const readerRef = useRef<HTMLDivElement>(null);
+
+  const updateLocalHtml = () => {
+    if (!readerRef.current) return;
+    const html = readerRef.current.innerHTML;
+    localStorage.setItem('highlighted_html', html);
+  };
+
+  useEffect(() => {
+    const html = localStorage.getItem('highlighted_html') ?? sample_html;
+    setHtml(html);
+  }, []);
 
   return createPortal(
     <>
@@ -33,21 +45,21 @@ export const SampleHtml: React.FC<Props> = ({ onClose }) => {
         exit={{ x: '100%' }}
         transition={{ type: 'spring', stiffness: 300, damping: 33 }}
       >
-        <Hightlight readerRef={readerRef} />
+        <ScHeading>
+          <IconButton icon={<ChevronBack />} onClick={onClose} />
+          <ScLabel>
+            Sample html taken from{' '}
+            <ScA href='https://markdown-it.github.io/'>
+              https://markdown-it.github.io/
+            </ScA>
+          </ScLabel>
+        </ScHeading>
+        <Hightlight readerRef={readerRef} onHighlight={updateLocalHtml} />
         <ScDocContainer>
-          <ScHeading>
-            <IconButton icon={<ChevronBack />} onClick={onClose} />
-            <ScLabel>
-              Sample html taken from{' '}
-              <ScA href='https://markdown-it.github.io/'>
-                https://markdown-it.github.io/
-              </ScA>
-            </ScLabel>
-          </ScHeading>
           <ScDoc
             ref={readerRef}
             id='sample_html'
-            dangerouslySetInnerHTML={{ __html: sample_html }}
+            dangerouslySetInnerHTML={{ __html: html }}
           />
         </ScDocContainer>
       </ScContainer>

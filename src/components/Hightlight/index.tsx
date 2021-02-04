@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useReducer, useEffect } from 'react';
 import * as CSS from 'csstype';
 import { IconButton } from '../Buttons';
 import { Tabs, TabItem } from '../Tabs';
@@ -16,6 +16,7 @@ interface Props {
   readerRef: React.MutableRefObject<HTMLElement | null>;
   className?: string;
   size?: number;
+  onHighlight?: () => void;
 }
 
 interface State {
@@ -38,7 +39,7 @@ const initialState: State = {
   styles: { backgroundColor: '#fabc02', color: '#222831' },
 };
 
-export const Hightlight: React.FC<Props> = ({ readerRef }) => {
+export const Hightlight: React.FC<Props> = ({ readerRef, onHighlight }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const {
     selecting,
@@ -50,19 +51,24 @@ export const Hightlight: React.FC<Props> = ({ readerRef }) => {
     selectedNote,
   } = state;
 
-  // console.log(state);
-
   const styleChangeHandler = (styles: CSS.Properties<string>) => {
     if (selectedId) {
       updateStyle(styles);
-      if (selectedStyles) dispatch({ selectedStyles: styles });
-      else dispatch({ styles });
-    } else dispatch({ styles });
+      onHighlight && onHighlight();
+      if (selectedStyles) {
+        dispatch({ selectedStyles: styles });
+        return;
+      }
+    }
+
+    dispatch({ styles });
+    localStorage.setItem('highlight_style', JSON.stringify(styles));
   };
 
   const highlightHandler = () => {
     if (selectedId) removeHighlight();
     else highlight();
+    onHighlight && onHighlight();
   };
 
   const {
@@ -114,7 +120,15 @@ export const Hightlight: React.FC<Props> = ({ readerRef }) => {
           disabled={selectedId === null}
         />
       ),
-      content: <Notes note={selectedNote} updateNote={updateNote} />,
+      content: (
+        <Notes
+          note={selectedNote}
+          updateNote={note => {
+            updateNote(note);
+            onHighlight && onHighlight();
+          }}
+        />
+      ),
     },
     {
       id: 'dismiss',
@@ -124,6 +138,11 @@ export const Hightlight: React.FC<Props> = ({ readerRef }) => {
       onClick: cancel,
     },
   ];
+
+  useEffect(() => {
+    const localStyles = localStorage.getItem('highlight_style');
+    localStyles && dispatch({ styles: JSON.parse(localStyles) });
+  }, []);
 
   return (
     <Tabs
