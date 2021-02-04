@@ -9,6 +9,7 @@
 
 - [Menu](#menu)
 - [Side Drawer](#side-drawer)
+- [Text Highlight](#text-highlight)
 
 ## Menu
 
@@ -26,3 +27,12 @@
 - **Swipeable**
 - **Responsive**
 - **Spring animated**
+
+## Text Highlight
+
+![Highlight](./gifs/highlight.gif)
+
+- **Highlight any range**
+- **Customize styles**
+- **Add note**
+
