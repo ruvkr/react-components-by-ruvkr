@@ -36,7 +36,7 @@ const initialState: State = {
   selectedNote: null,
   tagName: 'span',
   attributes: { class: 'highlighted' },
-  styles: { backgroundColor: '#fabc02', color: '#222831' },
+  styles: { backgroundColor: 'rgb(240, 240, 48)', color: 'rgb(34, 40, 49)' },
 };
 
 export const Hightlight: React.FC<Props> = ({ readerRef, onHighlight }) => {
