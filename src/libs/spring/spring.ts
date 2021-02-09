@@ -1,154 +1,143 @@
-import { SpringConfig } from './types';
+import { SpringConfigs, SpringInterface } from './types';
 
-export type SpringInterface = ReturnType<typeof Spring>;
-
-export function Spring(
-  {
+export function Spring(configs: SpringConfigs = {}): SpringInterface {
+  let {
     from = 0,
     to = 0,
     stiffness = 100,
     damping = 10,
-    mass = 1,
     initialVelocity = 0,
-    restVelocity = 0.01,
-    restDisplacement = 0.01,
-    onUpdate = () => {},
-    onComplete = () => {},
-  }: SpringConfig = {} as SpringConfig
-) {
-  let localFrom = from;
-  let localTo = to;
-  let k = stiffness;
-  let b = damping;
-  let m = mass;
-  let v0 = -initialVelocity;
-  let dv = restVelocity;
-  let dx = restDisplacement;
-  let x0 = localTo - localFrom;
-  let z = damping / (2 * Math.sqrt(stiffness * mass));
-  let w = Math.sqrt(stiffness / mass) / 1000;
-  let wd = w * Math.sqrt(1.0 - z * z);
-  let x = localFrom; // current position
-  let st = 0; // spring time
-  let pt = 0; // previous time
-  let v = 0; // current velocity
-  let px = 0; // previous position
+    mass = 1,
+    restDisplacement = 0.1,
+    restVelocity = 0.1,
+    onUpdate,
+    onComplete,
+  } = configs;
+
+  let totalDisplacement = to - from;
+  let zeta = damping / (2 * Math.sqrt(stiffness * mass));
+  let omega = Math.sqrt(stiffness / mass) / 1000;
+  let omega_d = omega * Math.sqrt(1.0 - zeta * zeta);
+
+  let currentTime = 0;
+  let prevTime = 0;
+  let currentPosition = from;
+  let prevPosition = 0;
+  let currentVelocity = 0;
+
   let isAnimating = false;
   let animationFrame = 0;
-  let localOnUpdate = onUpdate;
-  let localOnComplete = onComplete;
 
   function tickSpring(timeDelta: number) {
-    st += timeDelta;
-    px = x;
+    currentTime += timeDelta;
+    prevPosition = currentPosition;
 
-    if (z < 1) {
-      const e = Math.exp(-z * w * st);
-      const mo =
-        ((v0 + z * w * x0) / wd) * Math.sin(wd * st) + x0 * Math.cos(wd * st);
-      x = localTo - e * mo;
+    if (zeta < 1) {
+      const decay = Math.exp(-zeta * omega * currentTime);
+      const motion =
+        ((-initialVelocity + zeta * omega * totalDisplacement) / omega_d) *
+          Math.sin(omega_d * currentTime) +
+        totalDisplacement * Math.cos(omega_d * currentTime);
+      currentPosition = to - decay * motion;
     } else {
-      const e = Math.exp(-w * st);
-      x = localTo - e * (x0 + (v0 + w * x0) * st);
+      const decay = Math.exp(-omega * currentTime);
+      const motion =
+        totalDisplacement +
+        (-initialVelocity + omega * totalDisplacement) * currentTime;
+      currentPosition = to - decay * motion;
     }
 
-    v = (x - px) / timeDelta;
+    currentVelocity = (currentPosition - prevPosition) / timeDelta;
 
-    if (Math.abs(v) <= dv && Math.abs(localTo - x) <= dx) {
-      x = localTo;
+    if (
+      Math.abs(currentVelocity) <= restVelocity &&
+      Math.abs(to - currentPosition) <= restDisplacement
+    ) {
+      currentPosition = to;
       complete();
-      localOnUpdate(x);
-      localOnComplete();
-    } else localOnUpdate(x);
+      onUpdate && onUpdate(currentPosition);
+      onComplete && onComplete();
+    } else onUpdate && onUpdate(currentPosition);
   }
 
   function complete() {
+    isAnimating = false;
     cancelAnimationFrame(animationFrame);
     animationFrame = 0;
-    isAnimating = false;
-    st = 0;
-    pt = 0;
-    px = 0;
-    v = 0;
+    currentTime = 0;
+    prevTime = 0;
+    prevPosition = 0;
+    currentVelocity = 0;
   }
 
   function step(timestamp: number) {
-    tickSpring(timestamp - pt);
-    pt = timestamp;
+    tickSpring(timestamp - prevTime);
+    prevTime = timestamp;
     if (isAnimating) animationFrame = requestAnimationFrame(step);
   }
 
-  // handle first frame
   function prep(timestamp: number) {
-    // there is no prev time so setting timeDelta to 16.66667ms
     tickSpring(100 / 6);
-    // update prev time
-    pt = timestamp;
+    prevTime = timestamp;
     if (isAnimating) animationFrame = requestAnimationFrame(step);
   }
 
-  function start() {
-    if (!isAnimating) {
+  const springInterface: SpringInterface = {
+    isAnimating: () => isAnimating,
+    tick: tickSpring,
+    start(): SpringInterface {
+      if (totalDisplacement === 0) {
+        onComplete && onComplete();
+        return springInterface;
+      }
+      if (isAnimating) return springInterface;
       isAnimating = true;
       animationFrame = requestAnimationFrame(prep);
-    }
-    return spring;
-  }
+      return springInterface;
+    },
 
-  function stop() {
-    if (isAnimating) complete();
-    return spring;
-  }
+    stop(): void {
+      if (isAnimating) complete();
+    },
 
-  function update(
-    {
-      from = x,
-      to = localTo,
-      stiffness = k,
-      damping = b,
-      mass = m,
-      initialVelocity = v,
-      restVelocity = dv,
-      restDisplacement = dx,
-      onUpdate = localOnUpdate,
-      onComplete = localOnComplete,
-    }: Partial<SpringConfig> = {} as SpringConfig
-  ) {
-    localFrom = from;
-    localTo = to;
-    v0 = -initialVelocity;
-    x0 = localTo - localFrom;
-    z = damping / (2 * Math.sqrt(stiffness * mass));
-    w = Math.sqrt(stiffness / mass) / 1000;
-    wd = w * Math.sqrt(1.0 - z * z);
-    dv = restVelocity;
-    dx = restDisplacement;
-    st = 0;
+    update: function (configs): SpringInterface {
+      ({
+        from = currentPosition,
+        to = to,
+        stiffness = stiffness,
+        damping = damping,
+        initialVelocity = currentVelocity,
+        mass = mass,
+        restDisplacement = restDisplacement,
+        restVelocity = restVelocity,
+        onUpdate = onUpdate,
+        onComplete = onComplete,
+      } = configs);
 
-    localOnUpdate = onUpdate;
-    localOnComplete = onComplete;
+      if (configs.from != null) currentPosition = from;
+      if (configs.initialVelocity != null) currentVelocity = 0;
+      totalDisplacement = to - from;
+      zeta = damping / (2 * Math.sqrt(stiffness * mass));
+      omega = Math.sqrt(stiffness / mass) / 1000;
+      omega_d = omega * Math.sqrt(1.0 - zeta * zeta);
+      currentTime = 0;
+      return springInterface;
+    },
 
-    // return spring to be able to chain methods
-    return spring;
-  }
+    set: function (configs): SpringInterface {
+      ({
+        from = currentPosition,
+        to = to,
+        initialVelocity = currentVelocity,
+      } = configs);
 
-  function set({
-    from = x,
-    to = localTo,
-    initialVelocity = v,
-  }: {
-    from?: number;
-    to?: number;
-    initialVelocity?: number;
-  }) {
-    localFrom = from;
-    localTo = to;
-    v0 = -initialVelocity;
-    x0 = localTo - localFrom;
-    st = 0;
-    return spring;
-  }
+      if (configs.from != null) currentPosition = from;
+      if (configs.initialVelocity != null) currentVelocity = 0;
+      totalDisplacement = to - from;
+      currentTime = 0;
+      return springInterface;
+    },
+  };
 
-  const spring = { start, stop, set, update };
-  return spring;
+  return springInterface;
 }

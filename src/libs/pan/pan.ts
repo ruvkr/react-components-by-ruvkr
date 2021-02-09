@@ -1,224 +1,218 @@
 import {
+  PanDirections,
   Directions,
-  Touch,
+  StartPosition,
+  CurrentPosition,
+  Offset,
+  Delta,
   Velocity,
-  MoveData,
-  EndData,
-  PanConfig,
+  PanConfigs,
+  PanInterface,
 } from './types';
 
-export type PanInterface = ReturnType<typeof Pan>;
-
-export function Pan(target?: HTMLElement | Window | null) {
-  let added = false;
-  const targetElement = target ? target : window;
+export function Pan(target?: HTMLElement | Document | null): PanInterface {
+  const targetElement = target ?? document;
 
   // configs
-  let panDirection: Directions = Directions.Horizontal;
-  let callback: (data: MoveData | EndData) => void = () => {};
-  let startTest: (data: Touch) => boolean = () => true;
+  let { panDirection, onPanStart, onPanMove, onPanEnd }: PanConfigs = {};
 
   // states
-  let touchOrigin: Touch;
-  let touchPrev: Touch;
-  let touches: Touch[] = [];
-  let velocity: Velocity = { vx: 0, vy: 0 };
+  let added = false;
   let panning = false;
+  let offset: Offset = { ox: 0, oy: 0 };
+  let startPosition: StartPosition = { sx: 0, sy: 0 };
+  let prevPosition: CurrentPosition = { x: 0, y: 0, time: 0 };
+  let positions: CurrentPosition[] = [];
+  let velocity: Velocity = { vx: 0, vy: 0 };
 
   function startfunc(event: Event | TouchEvent | MouseEvent): void {
-    const touch = getOrigin(event as TouchEvent | MouseEvent);
+    if (event.type === 'mousedown' && (event as MouseEvent).button !== 0)
+      return;
+    offset = getTargetOffset(targetElement);
+    const position = getCurrentPosition(event as TouchEvent | MouseEvent);
 
-    if (startTest(touch)) {
-      // set properties for calculations
-      touchOrigin = touch;
-      touchPrev = touch;
-      touches.push(touch);
+    if (
+      onPanStart &&
+      onPanStart({
+        start: { sx: position.x, sy: position.y },
+        offset,
+      }) === false
+    )
+      return;
 
-      // add listeners
-      // adding them to window object because mouse can getout of the target
-      // component while moving fast
-      window.addEventListener('mousemove', movefunc);
-      window.addEventListener('mouseup', endfunc);
-      window.addEventListener('touchmove', movefunc, { passive: false });
-      window.addEventListener('touchend', endfunc);
-      // mouseleave fires on document
-      document.addEventListener('mouseleave', endfunc);
-    }
+    startPosition = { sx: position.x, sy: position.y };
+    prevPosition = position;
+    positions.push(position);
+
+    document.addEventListener('mousemove', movefunc);
+    document.addEventListener('mouseup', endfunc);
+    document.addEventListener('touchmove', movefunc, { passive: false });
+    document.addEventListener('touchend', endfunc);
+    document.addEventListener('mouseleave', endfunc);
   }
 
   function movefunc(event: TouchEvent | MouseEvent): void {
-    const touch = getOrigin(event);
-    const delta = getDelta(touchPrev, touch);
+    const position = getCurrentPosition(event);
+    const delta = getDelta(prevPosition, position);
 
-    if (panning || testDirection(panDirection, touchPrev, touch)) {
-      if (event.cancelable) event.preventDefault();
-
+    if (panning || testDirection(delta, panDirection)) {
+      event.cancelable && event.preventDefault();
       panning = true;
-      touches.push(touch);
-      velocity = getVelocity(touchPrev, touch, velocity);
-      touchPrev = touch;
+      positions.push(position);
+      velocity = getVelocity(delta);
+      prevPosition = position;
 
-      callback({
-        ox: touchOrigin.x,
-        oy: touchOrigin.y,
-        x: touch.x,
-        y: touch.y,
-        dx: delta.dx,
-        dy: delta.dy,
-        final: false,
-      });
+      onPanMove &&
+        onPanMove({
+          start: startPosition,
+          current: position,
+          offset,
+          delta,
+          velocity,
+        });
+      //
     } else {
-      // remove move listeners if test fail
-      window.removeEventListener('mousemove', movefunc);
-      window.removeEventListener('touchmove', movefunc);
+      document.removeEventListener('mousemove', movefunc);
+      document.removeEventListener('touchmove', movefunc);
     }
   }
 
-  function endfunc(event: TouchEvent | MouseEvent): void {
+  function endfunc(): void {
     if (panning) {
-      const touch = getOrigin(event);
-      const delta = getDelta(touchPrev, touch);
-      const lastTouch = touches[touches.length - 5] || touches[0];
-      const { direction, angle } = getDirection(lastTouch, touch);
+      const lastPostion = positions[positions.length - 5] ?? positions[0];
+      const delta = getDelta(lastPostion, prevPosition);
+      const { direction, angle } = getDirection(delta);
 
-      callback({
-        ox: touchOrigin.x,
-        oy: touchOrigin.y,
-        x: touch.x,
-        y: touch.y,
-        dx: delta.dx,
-        dy: delta.dy,
-        vx: velocity.vx,
-        vy: velocity.vy,
-        direction: direction,
-        angle: angle,
-        time: touch.time - touchOrigin.time,
-        final: true,
-      });
+      onPanEnd &&
+        onPanEnd({
+          start: startPosition,
+          current: prevPosition,
+          offset,
+          velocity,
+          angle,
+          direction,
+        });
+      //
     }
 
-    window.removeEventListener('mousemove', movefunc);
-    window.removeEventListener('mouseup', endfunc);
-    window.removeEventListener('touchmove', movefunc);
-    window.removeEventListener('touchend', endfunc);
+    document.removeEventListener('mousemove', movefunc);
+    document.removeEventListener('mouseup', endfunc);
+    document.removeEventListener('touchmove', movefunc);
+    document.removeEventListener('touchend', endfunc);
     document.removeEventListener('mouseleave', endfunc);
 
     panning = false;
-    touches = [];
+    offset = { ox: 0, oy: 0 };
+    startPosition = { sx: 0, sy: 0 };
+    prevPosition = { x: 0, y: 0, time: 0 };
     velocity = { vx: 0, vy: 0 };
+    positions = [];
   }
 
-  function add(panConfig: PanConfig = {} as PanConfig) {
-    if (!added) {
+  const pan: PanInterface = {
+    add: function (configs: PanConfigs = {} as PanConfigs): PanInterface {
+      if (added) return pan;
       added = true;
-
-      // configs
-      if (panConfig.panDirection != null) panDirection = panConfig.panDirection;
-      if (panConfig.callback) callback = panConfig.callback;
-      if (panConfig.startTest) startTest = panConfig.startTest;
-
-      // listeners
+      ({ panDirection, onPanStart, onPanEnd, onPanMove } = configs);
       targetElement.addEventListener('mousedown', startfunc);
       targetElement.addEventListener('touchstart', startfunc);
-    }
+      return pan;
+    },
 
-    return pan;
-  }
+    update: function (newConfigs: Partial<PanConfigs>): PanInterface {
+      if (!added) return pan;
+      ({
+        panDirection = panDirection,
+        onPanStart = onPanStart,
+        onPanEnd = onPanEnd,
+        onPanMove = onPanMove,
+      } = newConfigs);
 
-  function remove() {
-    if (added) {
+      return pan;
+    },
+
+    remove: function (): void {
+      if (!added) return;
       added = false;
-
-      // listeners
+      ({ panDirection, onPanStart, onPanEnd, onPanMove } = {} as PanConfigs);
       targetElement.removeEventListener('mousedown', startfunc);
       targetElement.removeEventListener('touchstart', startfunc);
-      window.removeEventListener('mousemove', movefunc);
-      window.removeEventListener('mouseup', endfunc);
+      document.removeEventListener('mousemove', movefunc);
+      document.removeEventListener('mouseup', endfunc);
       document.removeEventListener('mouseleave', endfunc);
-      window.removeEventListener('touchmove', movefunc);
-      window.removeEventListener('touchend', endfunc);
-    }
-
-    return pan;
-  }
-
-  function update(panConfig: Partial<PanConfig>) {
-    if (panConfig.panDirection != null) panDirection = panConfig.panDirection;
-    if (panConfig.callback) callback = panConfig.callback;
-    if (panConfig.startTest) startTest = panConfig.startTest;
-    return pan;
-  }
-
-  const pan = { add, remove, update };
+      document.removeEventListener('touchmove', movefunc);
+      document.removeEventListener('touchend', endfunc);
+    },
+  };
 
   return pan;
 }
 
-function getOrigin(event: TouchEvent | MouseEvent): Touch {
-  if ('touches' in event) {
+function getTargetOffset(target: HTMLElement | Document): Offset {
+  const targetPosition =
+    'getBoundingClientRect' in target
+      ? target.getBoundingClientRect()
+      : { x: 0, y: 0 };
+  return { ox: targetPosition.x, oy: targetPosition.y };
+}
+
+function getCurrentPosition(event: TouchEvent | MouseEvent): CurrentPosition {
+  if ('changedTouches' in event) {
     return {
-      x: event.changedTouches[0].pageX,
-      y: event.changedTouches[0].pageY,
+      x: event.changedTouches[0].clientX,
+      y: event.changedTouches[0].clientY,
       time: event.timeStamp,
     };
   } else {
     return {
-      x: event.pageX,
-      y: event.pageY,
+      x: event.clientX,
+      y: event.clientY,
       time: event.timeStamp,
     };
   }
 }
 
-function getDirection(
-  { x: sx = 0, y: sy = 0 }: Touch = {} as Touch,
-  { x: ex = 0, y: ey = 0 }: Touch = {} as Touch
-): { direction: Directions; angle: number } {
-  const angle = Math.atan2(ey - sy, ex - sx);
-  let direction: Directions = Directions.Left;
+function getDirection(delta: Delta): { direction: Directions; angle: number } {
+  const angle = Math.atan2(delta.dy, delta.dx);
 
-  if (angle > -0.75 * Math.PI) direction = Directions.Top;
-  if (angle > -0.25 * Math.PI) direction = Directions.Right;
-  if (angle > 0.25 * Math.PI) direction = Directions.Bottom;
-  if (angle > 0.75 * Math.PI) direction = Directions.Left;
+  let direction: PanDirections = PanDirections.left;
+  if (angle > -0.75 * Math.PI) direction = PanDirections.top;
+  if (angle > -0.25 * Math.PI) direction = PanDirections.right;
+  if (angle > 0.25 * Math.PI) direction = PanDirections.bottom;
+  if (angle > 0.75 * Math.PI) direction = PanDirections.left;
 
   return { direction, angle };
 }
 
 function getDelta(
-  { x: sx = 0, y: sy = 0 }: Touch = {} as Touch,
-  { x: ex = 0, y: ey = 0 }: Touch = {} as Touch
-): { dx: number; dy: number } {
-  return { dx: ex - sx, dy: ey - sy };
+  startPosition: CurrentPosition,
+  endPosition: CurrentPosition
+): Delta {
+  return {
+    dx: endPosition.x - startPosition.x,
+    dy: endPosition.y - startPosition.y,
+    dt: endPosition.time - startPosition.time,
+  };
 }
 
-function getVelocity(
-  { x: sx = 0, y: sy = 0, time: st = 0 }: Touch = {} as Touch,
-  { x: ex = 0, y: ey = 0, time: et = 1 }: Touch = {} as Touch,
-  { vx = 0, vy = 0 }: Velocity = {} as Velocity
-): Velocity {
-  const dt = et - st;
-  const alpha = 1 - Math.exp(-dt / 0.1);
-  const dvx = (ex - sx) / dt;
-  const dvy = (ey - sy) / dt;
-  const new_vx = alpha * dvx + (1 - alpha) * vx;
-  const new_vy = alpha * dvy + (1 - alpha) * vy;
-
-  return { vx: new_vx, vy: new_vy };
+function getVelocity(delta: Delta): Velocity {
+  if (delta.dt === 0) return { vx: 0, vy: 0 };
+  else return { vx: delta.dx / delta.dt, vy: delta.dy / delta.dt };
 }
 
 function testDirection(
-  panDirection: Directions,
-  start: Touch,
-  end: Touch
+  delta: Delta,
+  panDirection: PanDirections = PanDirections.any
 ): boolean {
-  const { direction } = getDirection(start, end);
+  if (panDirection === PanDirections.any) return true;
+  const { direction } = getDirection(delta);
 
   return (
     panDirection === direction ||
-    (panDirection === Directions.Horizontal &&
-      (direction === Directions.Right || direction === Directions.Left)) ||
-    (panDirection === Directions.Vertical &&
-      (direction === Directions.Top || direction === Directions.Bottom))
+    (panDirection === PanDirections.horizontal &&
+      (direction === PanDirections.right ||
+        direction === PanDirections.left)) ||
+    (panDirection === PanDirections.vertical &&
+      (direction === PanDirections.top || direction === PanDirections.bottom))
   );
 }

@@ -15,11 +15,18 @@ export const TogglerButton: React.FC<Props> = ({ onClick, progress }) => {
   const middleRotate = useTransform(progress, [0, 1], [0, 45]);
   const rotate = useTransform(progress, v => v * 90);
 
+  const clickHandler = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    event.stopPropagation();
+    onClick && onClick();
+  };
+
   return (
     <ScContainer>
       <ScInner>
         <ScBackground style={{ opacity: progress }} />
-        <ScToggler onClick={onClick}>
+        <ScToggler onClick={clickHandler}>
           <ScFocus tabIndex={-1}>
             <svg width='100%' height='100%' viewBox='0 0 26 26'>
               <motion.g fill='none' style={{ rotate }}>

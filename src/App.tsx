@@ -9,7 +9,7 @@ export const App: React.FC = () => {
   return (
     <ScApp ref={appRef}>
       <Home />
-      <SideDrawer appRef={appRef} />
+      <SideDrawer containerRef={appRef} />
     </ScApp>
   );
 };

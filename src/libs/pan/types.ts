@@ -1,50 +1,55 @@
-export enum Directions {
-  Top,
-  Right,
-  Bottom,
-  Left,
-  Horizontal,
-  Vertical,
+export enum PanDirections {
+  top,
+  right,
+  bottom,
+  left,
+  horizontal,
+  vertical,
+  any,
 }
 
-export interface Touch {
-  x: number;
-  y: number;
-  time: number;
-}
+export type Directions = Exclude<
+  PanDirections,
+  PanDirections.horizontal | PanDirections.vertical | PanDirections.any
+>;
 
-export interface Velocity {
-  vx: number;
-  vy: number;
-}
+export type StartPosition = { sx: number; sy: number };
+export type CurrentPosition = { x: number; y: number; time: number };
+export type Offset = { ox: number; oy: number };
+export type Delta = { dx: number; dy: number; dt: number };
+export type Velocity = { vx: number; vy: number };
 
-export interface MoveData {
-  ox: number;
-  oy: number;
-  x: number;
-  y: number;
-  dx: number;
-  dy: number;
-  final: false;
-}
+export type PanStartInfo = {
+  start: StartPosition;
+  offset: Offset;
+};
 
-export interface EndData {
-  ox: number;
-  oy: number;
-  x: number;
-  y: number;
-  dx: number;
-  dy: number;
-  vx: number;
-  vy: number;
+export type PanMoveInfo = {
+  start: StartPosition;
+  current: CurrentPosition;
+  offset: Offset;
+  delta: Delta;
+  velocity: Velocity;
+};
+
+export type PanEndInfo = {
+  start: StartPosition;
+  current: CurrentPosition;
+  offset: Offset;
+  velocity: Velocity;
   direction: Directions;
   angle: number;
-  time: number;
-  final: true;
+};
+
+export interface PanConfigs {
+  panDirection?: PanDirections;
+  onPanStart?: (info: PanStartInfo) => boolean | void;
+  onPanMove?: (info: PanMoveInfo) => void;
+  onPanEnd?: (info: PanEndInfo) => void;
 }
 
-export interface PanConfig {
-  panDirection?: Directions;
-  callback?: (data: MoveData | EndData) => void;
-  startTest?: (data: Touch) => boolean;
-}
+export type PanInterface = {
+  add(configs?: PanConfigs): PanInterface;
+  update(configs: Partial<PanConfigs>): PanInterface;
+  remove(): void;
+};
