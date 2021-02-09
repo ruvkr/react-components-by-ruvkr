@@ -43,7 +43,7 @@ export function useSideDrawer(
       springRef.current.stop();
       panRef.current.remove();
     };
-  }, [parentRef, motionX]);
+  }, [parentRef]);
 
   // sliding
   useEffect(() => {
