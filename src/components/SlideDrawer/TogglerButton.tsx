@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import styled from 'styled-components';
 import { rgba } from 'polished';
 import { motion, useTransform, MotionValue } from 'framer-motion';
@@ -15,18 +16,11 @@ export const TogglerButton: React.FC<Props> = ({ onClick, progress }) => {
   const middleRotate = useTransform(progress, [0, 1], [0, 45]);
   const rotate = useTransform(progress, v => v * 90);
 
-  const clickHandler = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    event.stopPropagation();
-    onClick && onClick();
-  };
-
-  return (
+  return createPortal(
     <ScContainer>
       <ScInner>
         <ScBackground style={{ opacity: progress }} />
-        <ScToggler onClick={clickHandler}>
+        <ScToggler onClick={onClick}>
           <ScFocus tabIndex={-1}>
             <svg width='100%' height='100%' viewBox='0 0 26 26'>
               <motion.g fill='none' style={{ rotate }}>
@@ -38,7 +32,8 @@ export const TogglerButton: React.FC<Props> = ({ onClick, progress }) => {
           </ScFocus>
         </ScToggler>
       </ScInner>
-    </ScContainer>
+    </ScContainer>,
+    document.body
   );
 };
 
