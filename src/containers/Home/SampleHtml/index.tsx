@@ -77,7 +77,7 @@ const ScContainer = styled(motion.div)`
   display: grid;
   background-color: ${p => p.theme.col4};
   grid-template-rows: auto 1fr;
-  z-index: 100;
+  z-index: 200;
 `;
 
 const ScHeading = styled.div`
