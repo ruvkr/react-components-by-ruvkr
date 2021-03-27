@@ -1,6 +1,6 @@
 export const withStyle = (
-  SVG: React.FC<React.SVGProps<SVGSVGElement>>,
-): React.FC => {
+  SVG: React.FC<React.SVGProps<SVGSVGElement>>
+): React.FC<React.SVGProps<SVGSVGElement>> => {
   return props => {
     return (
       <SVG

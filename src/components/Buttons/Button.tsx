@@ -1,26 +1,21 @@
 import { rgba } from 'polished';
 import styled from 'styled-components';
 
-interface Props {
+export interface ButtonProps {
   disabled?: boolean;
   icon?: JSX.Element;
   name?: string;
+  title?: string;
   className?: string;
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
-export const Button: React.FC<Props> = ({
-  disabled = false,
-  icon,
-  name,
-  className,
-  onClick,
-}) => {
+export const Button: React.FC<ButtonProps> = ({ disabled = false, icon, name, title, className, onClick }) => {
   return (
-    <ScButton disabled={disabled} onClick={onClick}>
-      <ScFocus tabIndex={-1} className={className}>
-        {icon && <ScIcon>{icon}</ScIcon>}
-        {name && <ScLabel $hasIcon={Boolean(icon)}>{name}</ScLabel>}
+    <ScButton disabled={disabled} onClick={onClick} title={title ?? name} className={className}>
+      <ScFocus tabIndex={-1} className='button-focus'>
+        {icon && <ScIcon className='button-icon'>{icon}</ScIcon>}
+        {name && <ScLabel className='button-name'>{name}</ScLabel>}
       </ScFocus>
     </ScButton>
   );
@@ -31,7 +26,6 @@ const ScButton = styled.button`
   padding: 0;
   margin: 0;
   border: none;
-  display: flex;
   background-color: transparent;
   cursor: pointer;
   transition: opacity 300ms ease-in-out;
@@ -89,8 +83,11 @@ const ScIcon = styled.div`
   background-color: rgba(0, 0, 0, 0.15);
 `;
 
-const ScLabel = styled.div<{ $hasIcon: boolean }>`
+const ScLabel = styled.div`
   color: ${p => rgba(p.theme.col1, 0.5)};
   padding: 8px 16px;
-  padding-left: ${p => (p.$hasIcon ? 8 : 16)}px;
+  padding-left: 8px;
+  &:only-child {
+    padding-left: 16px;
+  }
 `;
