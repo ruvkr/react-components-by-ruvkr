@@ -1,0 +1,63 @@
+.iconbutton {
+  font: inherit;
+  padding: 0;
+  margin: 0;
+  border: none;
+  display: flex;
+  background-color: transparent;
+  cursor: pointer;
+  border-radius: 50%;
+  overflow: hidden;
+
+  &:focus,
+  &:active {
+    outline: none;
+    .focus {
+      background-color: var(--hover-30);
+      transition: background-color 300ms ease-in-out;
+    }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    .icon {
+      color: var(--disabled);
+      fill: var(--disabled);
+      stroke: var(--disabled);
+      transition: all 300ms ease-in-out;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) {
+      .focus {
+        background-color: var(--hover-30);
+        transition: background-color 300ms ease-in-out;
+      }
+    }
+  }
+}
+
+.focus {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transition: all 300ms ease-in-out;
+
+  &:focus,
+  &:active {
+    outline: none;
+  }
+}
+
+.icon {
+  display: flex;
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  padding: percentage(2/9);
+  color: var(--accent);
+  fill: var(--accent);
+  stroke: var(--accent);
+  transition: all 300ms ease-in-out;
+}

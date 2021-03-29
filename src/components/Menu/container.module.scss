@@ -1,0 +1,38 @@
+.container {
+  // top: 0;
+  // left: 0;
+  position: fixed;
+  z-index: 900;
+}
+
+.pointer {
+  position: fixed;
+  z-index: 899;
+  width: 36px;
+  height: 12px;
+  // clip-path: polygon(100% 0, 0 0, 50% 100%);
+  background-color: var(--popup);
+}
+
+.backdrop {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 898;
+  overflow: hidden;
+}
+
+.background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: var(--popup);
+  border-radius: 8px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}

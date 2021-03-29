@@ -86,57 +86,57 @@ export const Hightlight: React.FC<Props> = ({ readerRef, onHighlight }) => {
   });
 
   const tabs: TabItem[] = [
-    {
-      id: 'highlight',
-      name: 'highlight',
-      icon: props => (
-        <IconButton
-          {...props}
-          icon={<ColorWand />}
-          active={Boolean(selectedId)}
-        />
-      ),
-      isButton: true,
-      onClick: highlightHandler,
-    },
-    {
-      id: 'styles',
-      name: 'styles',
-      icon: props => <IconButton {...props} icon={<ColorFill />} />,
-      content: (
-        <StyleEditor
-          allStyles={selectedStyles ?? styles}
-          onChange={styleChangeHandler}
-        />
-      ),
-    },
-    {
-      id: 'note',
-      name: 'note',
-      icon: props => (
-        <IconButton
-          {...props}
-          icon={<ChatboxEllipses />}
-          disabled={selectedId === null}
-        />
-      ),
-      content: (
-        <Notes
-          note={selectedNote}
-          updateNote={note => {
-            updateNote(note);
-            onHighlight && onHighlight();
-          }}
-        />
-      ),
-    },
-    {
-      id: 'dismiss',
-      name: 'dismiss',
-      icon: props => <IconButton {...props} icon={<Close />} />,
-      isButton: true,
-      onClick: cancel,
-    },
+    // {
+    //   id: 'highlight',
+    //   name: 'highlight',
+    //   icon: props => (
+    //     <IconButton
+    //       {...props}
+    //       icon={<ColorWand />}
+    //       active={Boolean(selectedId)}
+    //     />
+    //   ),
+    //   isButton: true,
+    //   onClick: highlightHandler,
+    // },
+    // {
+    //   id: 'styles',
+    //   name: 'styles',
+    //   icon: props => <IconButton {...props} icon={<ColorFill />} />,
+    //   content: (
+    //     <StyleEditor
+    //       allStyles={selectedStyles ?? styles}
+    //       onChange={styleChangeHandler}
+    //     />
+    //   ),
+    // },
+    // {
+    //   id: 'note',
+    //   name: 'note',
+    //   icon: props => (
+    //     <IconButton
+    //       {...props}
+    //       icon={<ChatboxEllipses />}
+    //       disabled={selectedId === null}
+    //     />
+    //   ),
+    //   content: (
+    //     <Notes
+    //       note={selectedNote}
+    //       updateNote={note => {
+    //         updateNote(note);
+    //         onHighlight && onHighlight();
+    //       }}
+    //     />
+    //   ),
+    // },
+    // {
+    //   id: 'dismiss',
+    //   name: 'dismiss',
+    //   icon: props => <IconButton {...props} icon={<Close />} />,
+    //   isButton: true,
+    //   onClick: cancel,
+    // },
   ];
 
   useEffect(() => {

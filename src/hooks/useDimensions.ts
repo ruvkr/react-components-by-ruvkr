@@ -1,16 +1,16 @@
 import { useLayoutEffect } from 'react';
 
-export interface DimensionData {
+export interface DimensionInfo {
   x: number;
   y: number;
   width: number;
   height: number;
 }
 
-const useDimensions = (
+export function useDimensions(
   ref: React.MutableRefObject<HTMLElement | null>,
-  callback: (data: DimensionData | null) => void = () => {}
-) => {
+  callback: (data: DimensionInfo | null) => void
+) {
   useLayoutEffect(() => {
     if (ref.current) {
       const { offsetWidth: width, offsetHeight: height } = ref.current;
@@ -18,6 +18,4 @@ const useDimensions = (
       callback({ x, y, width, height });
     } else callback(null);
   }, [ref, callback]);
-};
-
-export { useDimensions };
+}

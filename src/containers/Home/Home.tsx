@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { rgba } from 'polished';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu } from '../../components/Menu';
 import { Button } from '../../components/Buttons';
@@ -13,16 +12,16 @@ export const Home: React.FC = () => {
 
   return (
     <ScContainer>
-      <AnimatePresence>
+      {/* <AnimatePresence>
         {show && <SampleHtml onClose={() => setShow(false)} />}
-      </AnimatePresence>
-      <ScButton
+      </AnimatePresence> */}
+      {/* <ScButton
         name='Load Sample'
         icon={<Document />}
         onClick={() => setShow(true)}
-      />
+      /> */}
       <ScDragable drag dragMomentum={false}>
-        <Menu items={menuItems} />
+        <Menu items={menuItems} title='Menu' />
       </ScDragable>
     </ScContainer>
   );
@@ -54,6 +53,6 @@ const ScDragable = styled(motion.div)`
   align-items: center;
   justify-content: center;
   background-color: ${props => props.theme.col5};
-  box-shadow: 0 0 8px ${rgba('#000', 0.2)};
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
   cursor: grab;
 `;

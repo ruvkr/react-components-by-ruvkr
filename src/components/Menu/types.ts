@@ -10,6 +10,7 @@ export interface MenuItem {
 
 export interface ControlItem {
   id: string;
+  title: string;
   icon: JSX.Element;
   disabled?: boolean;
   onClick?: () => void;

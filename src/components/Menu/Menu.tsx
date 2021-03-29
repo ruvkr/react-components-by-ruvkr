@@ -1,19 +1,15 @@
 import { useRef, useReducer } from 'react';
-import styled from 'styled-components';
-import { rgba } from 'polished';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, AnimateSharedLayout } from 'framer-motion';
 import { MenuItem, ControlItem } from './types';
-import {
-  EllipsisHorizontal,
-  ChevronForward,
-  ChevronBack,
-  Close,
-} from '../../assets/icons/essentials';
+import { EllipsisHorizontal, ChevronForward, ChevronBack, Close } from '../../assets/icons/essentials';
 import { Container } from './Container';
 import { Items } from './Items';
+import { Button } from '../Buttons';
+import styles from './menu.module.scss';
 
 interface Props {
   name?: string;
+  title?: string;
   disabled?: boolean;
   icon?: JSX.Element;
   togglerIcon?: JSX.Element;
@@ -30,6 +26,7 @@ interface State {
 
 export const Menu: React.FC<Props> = ({
   name,
+  title,
   icon,
   disabled = false,
   togglerIcon = <EllipsisHorizontal />,
@@ -44,7 +41,7 @@ export const Menu: React.FC<Props> = ({
   });
 
   const { activeItems, prevItems, forwardItems, show } = state;
-  const togglerRef = useRef<HTMLButtonElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const delayDirection = useRef<1 | -1>(1);
 
   const togglerShow = () => {
@@ -88,53 +85,64 @@ export const Menu: React.FC<Props> = ({
   const control_items: ControlItem[] = [
     {
       id: 'back',
+      title: 'Go back',
       icon: <ChevronBack />,
       disabled: prevItems.length === 0,
       onClick: prevHandler,
     },
     {
       id: 'forward',
+      title: 'Go forward',
       icon: <ChevronForward />,
       disabled: forwardItems.length === 0,
       onClick: forwardHandler,
     },
     {
       id: 'exit',
+      title: 'Close',
       icon: <Close />,
       onClick: togglerShow,
     },
   ];
 
   return (
-    <ScContainer>
-      <ScToggler ref={togglerRef} disabled={disabled} onClick={togglerShow}>
-        <ScFocus tabIndex={-1}>
-          {icon && <ScMenuIcon>{icon}</ScMenuIcon>}
-          {name && <ScMenuName>{name}</ScMenuName>}
-          <ScTogglerIcon animate={{ rotate: show ? 90 : 0 }}>
+    <div className={styles.container}>
+      <Button
+        disabled={disabled}
+        onClick={togglerShow}
+        name={name}
+        title={title}
+        icon={icon}
+        forwardRef={buttonRef}
+        badge={
+          <motion.div animate={{ rotate: show ? 90 : 0 }} className={styles.badge}>
             {togglerIcon}
-          </ScTogglerIcon>
-        </ScFocus>
-      </ScToggler>
+          </motion.div>
+        }
+      />
 
-      <AnimatePresence>
-        {show && (
-          <ScItemsContainer
-            togglerRef={togglerRef}
-            setDelayDirection={delayDirection}
-            onOutsideClick={togglerShow}
-          >
-            <Items
+      <AnimateSharedLayout>
+        <AnimatePresence>
+          {show && (
+            <Container
               items={activeItems}
-              controlItems={control_items}
-              onSubActive={subActiveHandler}
-              getDelayDirection={delayDirection}
-              onClick={() => hideOnClick && togglerShow()}
+              buttonRef={buttonRef}
+              setDelayDirection={delayDirection}
+              onOutsideClick={() => show && togglerShow()}
+              children={
+                <Items
+                  items={activeItems}
+                  controlItems={control_items}
+                  onSubActive={subActiveHandler}
+                  getDelayDirection={delayDirection}
+                  onClick={() => hideOnClick && togglerShow()}
+                />
+              }
             />
-          </ScItemsContainer>
-        )}
-      </AnimatePresence>
-    </ScContainer>
+          )}
+        </AnimatePresence>
+      </AnimateSharedLayout>
+    </div>
   );
 };
 
@@ -142,75 +150,3 @@ const reducer = (state: State, payload: Partial<State>): State => ({
   ...state,
   ...payload,
 });
-
-const ScContainer = styled.div`
-  display: inline-flex;
-`;
-
-const ScItemsContainer = styled(Container)`
-  color: ${p => rgba(p.theme.col1, 0.5)};
-`;
-
-const ScToggler = styled.button`
-  font: inherit;
-  border: none;
-  background-color: transparent;
-  padding: 0;
-  display: flex;
-  color: ${props => props.theme.col2};
-  fill: ${props => props.theme.col2};
-  cursor: pointer;
-
-  &:focus,
-  &:active {
-    outline: none;
-    & > div {
-      background-color: ${p => rgba(p.theme.col2, 0.2)};
-      transition: background-color 300ms ease-in-out;
-    }
-  }
-  &:disabled {
-    opacity: 0.2;
-    cursor: not-allowed;
-  }
-  @media (hover: hover) and (pointer: fine) {
-    &:hover:not(:disabled) {
-      & > div {
-        background-color: ${p => rgba(p.theme.col2, 0.2)};
-        transition: background-color 300ms ease-in-out;
-      }
-    }
-  }
-`;
-
-const ScFocus = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 8px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  background-color: transparent;
-  transition: background-color 300ms ease-in-out;
-
-  &:focus,
-  &:active {
-    outline: none;
-  }
-`;
-
-const ScTogglerIcon = styled(motion.div)`
-  width: 20px;
-  height: 20px;
-`;
-
-const ScMenuName = styled.div`
-  text-align: left;
-  margin-right: 8px;
-`;
-
-const ScMenuIcon = styled.div`
-  width: 16px;
-  height: 16px;
-  margin-right: 8px;
-`;

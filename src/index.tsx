@@ -1,16 +1,11 @@
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import { App } from './App';
 import reportWebVitals from './reportWebVitals';
-import * as theme from './configs/themes';
-import { ThemeProvider } from 'styled-components';
 
 const app = (
   <StrictMode>
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
+    <App />
   </StrictMode>
 );
 
