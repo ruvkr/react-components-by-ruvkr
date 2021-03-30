@@ -7,7 +7,7 @@ import { Items } from './Items';
 import { Button } from '../Buttons';
 import styles from './menu.module.scss';
 
-interface Props {
+export interface MenuProps {
   name?: string;
   title?: string;
   disabled?: boolean;
@@ -24,7 +24,7 @@ interface State {
   show: boolean;
 }
 
-export const Menu: React.FC<Props> = ({
+export const Menu: React.FC<MenuProps> = ({
   name,
   title,
   icon,
@@ -46,14 +46,8 @@ export const Menu: React.FC<Props> = ({
 
   const togglerShow = () => {
     if (disabled || items.length === 0) return;
-    if (show) {
-      dispatch({
-        show: false,
-        activeItems: items,
-        prevItems: [],
-        forwardItems: [],
-      });
-    } else dispatch({ show: true });
+    if (show) dispatch({ show: false, activeItems: items, prevItems: [], forwardItems: [] });
+    else dispatch({ show: true });
   };
 
   const subActiveHandler = (items: MenuItem[]) => {

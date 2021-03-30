@@ -15,7 +15,6 @@ interface Props {
 export const Container: React.FC<Props> = ({ children, buttonRef, setDelayDirection, onOutsideClick, items }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const firstRun = useRef(true);
-  // // const pointerRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     const targetDimensions = getDimensions(buttonRef);
@@ -42,15 +41,6 @@ export const Container: React.FC<Props> = ({ children, buttonRef, setDelayDirect
   return createPortal(
     <>
       <div key='menu-backdrop' onClick={onOutsideClick} className={styles.backdrop} />
-      {/* <motion.div
-        key='menu-pointer'
-        className={styles.pointer}
-        ref={pointerRef}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
-      /> */}
       <motion.div
         key='menu-container'
         ref={containerRef}

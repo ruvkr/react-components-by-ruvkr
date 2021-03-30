@@ -13,7 +13,7 @@ import {
   List,
   Text,
   Time,
-  Expand,
+  Layers,
 } from '../../assets/icons/essentials';
 
 export const menuItems: MenuItem[] = [
@@ -22,22 +22,18 @@ export const menuItems: MenuItem[] = [
     name: 'Upload file',
     icon: <CloudUpload />,
   },
+  '---',
   {
     id: uuid(),
     name: 'Share with others',
     icon: <Share />,
   },
-  // {
-  //   id: uuid(),
-  //   name: 'Magnify',
-  //   icon: <Magnifier />,
-  //   onClick: () => console.log('magnify'),
-  // },
   {
     id: uuid(),
     name: 'Bookmark this page',
     icon: <Bookmarks />,
   },
+  '---',
   {
     id: uuid(),
     name: 'Cloud',
@@ -45,11 +41,6 @@ export const menuItems: MenuItem[] = [
     disabled: true,
     onClick: () => console.log('cloud'),
   },
-  // {
-  //   id: uuid(),
-  //   name: 'Back to home',
-  //   icon: <Home />,
-  // },
   {
     id: uuid(),
     name: 'Sort by',
@@ -73,27 +64,18 @@ export const menuItems: MenuItem[] = [
       },
     ],
   },
-  // {
-  //   id: uuid(),
-  //   name: 'Fevorite',
-  //   icon: <Heart />,
-  // },
   {
     id: uuid(),
     name: 'Download PDF',
     icon: <Document />,
     disabled: true,
   },
-  // {
-  //   id: uuid(),
-  //   name: 'Download this file',
-  //   icon: <Download />,
-  // },
+  '---',
   {
     id: uuid(),
     name: 'Deep submenu',
     isSubMenu: true,
-    icon: <Expand />,
+    icon: <Layers />,
     items: [
       {
         id: uuid(),
@@ -105,10 +87,11 @@ export const menuItems: MenuItem[] = [
         name: 'Another option',
         icon: <Home />,
       },
+      '---',
       {
         id: uuid(),
         name: 'Deep',
-        icon: <Expand />,
+        icon: <Layers />,
         isSubMenu: true,
         items: [
           {

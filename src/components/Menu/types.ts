@@ -1,12 +1,15 @@
-export interface MenuItem {
-  id: string;
-  disabled?: boolean;
-  icon?: JSX.Element;
-  isSubMenu?: boolean;
-  items?: MenuItem[];
-  name: string;
-  onClick?: () => void;
-}
+export type MenuItem =
+  | {
+      id: string;
+      disabled?: boolean;
+      icon?: JSX.Element;
+      isSubMenu?: boolean;
+      items?: MenuItem[];
+      name: string;
+      title?: string;
+      onClick?: () => void;
+    }
+  | '---'; // devider
 
 export interface ControlItem {
   id: string;

@@ -1,17 +1,6 @@
 .container {
-  // top: 0;
-  // left: 0;
   position: fixed;
   z-index: 900;
-}
-
-.pointer {
-  position: fixed;
-  z-index: 899;
-  width: 36px;
-  height: 12px;
-  // clip-path: polygon(100% 0, 0 0, 50% 100%);
-  background-color: var(--popup);
 }
 
 .backdrop {
