@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from 'react';
-import { motion, Transition, TargetAndTransition } from 'framer-motion';
+import { motion, Transition } from 'framer-motion';
 import { MenuItem, ControlItem } from './types';
 import { ChevronForward } from '../../assets/icons/essentials';
 import { Controls } from './Controls';

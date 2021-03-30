@@ -15,6 +15,7 @@ export interface MenuProps {
   togglerIcon?: JSX.Element;
   items?: MenuItem[];
   hideOnClick?: boolean;
+  zIndex?: number;
 }
 
 interface State {
@@ -32,6 +33,7 @@ export const Menu: React.FC<MenuProps> = ({
   togglerIcon = <EllipsisHorizontal />,
   items = [],
   hideOnClick = true,
+  zIndex,
 }) => {
   const [state, dispatch] = useReducer(reducer, {
     activeItems: items,
@@ -123,6 +125,7 @@ export const Menu: React.FC<MenuProps> = ({
               buttonRef={buttonRef}
               setDelayDirection={delayDirection}
               onOutsideClick={() => show && togglerShow()}
+              zIndex={zIndex}
               children={
                 <Items
                   items={activeItems}

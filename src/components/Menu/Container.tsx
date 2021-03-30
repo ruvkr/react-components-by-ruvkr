@@ -10,9 +10,17 @@ interface Props {
   buttonRef: React.MutableRefObject<HTMLElement | null>;
   setDelayDirection: React.MutableRefObject<1 | -1>;
   onOutsideClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  zIndex?: number;
 }
 
-export const Container: React.FC<Props> = ({ children, buttonRef, setDelayDirection, onOutsideClick, items }) => {
+export const Container: React.FC<Props> = ({
+  children,
+  buttonRef,
+  setDelayDirection,
+  onOutsideClick,
+  items,
+  zIndex = 100,
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const firstRun = useRef(true);
 
@@ -39,7 +47,7 @@ export const Container: React.FC<Props> = ({ children, buttonRef, setDelayDirect
   }, [buttonRef, items, setDelayDirection]);
 
   return createPortal(
-    <>
+    <div id='menu-container' style={{ zIndex }}>
       <div key='menu-backdrop' onClick={onOutsideClick} className={styles.backdrop} />
       <motion.div
         key='menu-container'
@@ -52,9 +60,7 @@ export const Container: React.FC<Props> = ({ children, buttonRef, setDelayDirect
         <motion.div layout className={styles.background} />
         {children}
       </motion.div>
-    </>,
-
-    // mount in id="others"
-    document.getElementById('others') as HTMLElement
+    </div>,
+    document.body
   );
 };
