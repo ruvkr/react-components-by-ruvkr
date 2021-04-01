@@ -1,0 +1,49 @@
+.container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.dragable {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 50px;
+  right: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+  cursor: grab;
+  border-radius: 150px;
+  background: linear-gradient(145deg, #181d23, #1d222a);
+  box-shadow: 5px 5px 16px #0e1014, -5px -5px 16px #29303b;
+}
+
+.info {
+  position: absolute;
+  left: 0;
+  transform: translateX(-100%);
+  white-space: nowrap;
+  color: var(--secondary-50);
+  padding: 8px;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 300ms linear;
+
+  &.hide {
+    opacity: 0;
+    transition: opacity 300ms linear;
+  }
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  margin: 0 4px;
+  color: var(--secondary-50);
+  fill: var(--secondary-50);
+  stroke: var(--secondary-50);
+  vertical-align: bottom;
+}

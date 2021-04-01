@@ -10,11 +10,9 @@ import {
   PanInterface,
 } from './types';
 
-export function Pan(target?: HTMLElement | Document | null): PanInterface {
-  const targetElement = target ?? document;
-
+export function Pan(): PanInterface {
   // configs
-  let { panDirection, onPanStart, onPanMove, onPanEnd }: PanConfigs = {};
+  let { panDirection, onPanStart, onPanMove, onPanEnd, target = document }: PanConfigs = {};
 
   // states
   let added = false;
@@ -25,20 +23,13 @@ export function Pan(target?: HTMLElement | Document | null): PanInterface {
   let positions: CurrentPosition[] = [];
   let velocity: Velocity = { vx: 0, vy: 0 };
 
-  function startfunc(event: Event | TouchEvent | MouseEvent): void {
-    if (event.type === 'mousedown' && (event as MouseEvent).button !== 0)
-      return;
-    offset = getTargetOffset(targetElement);
+  function startfunc(event: TouchEvent | MouseEvent): void {
+    if (event.type === 'mousedown' && (event as MouseEvent).button !== 0) return;
+    offset = getTargetOffset(target);
     const position = getCurrentPosition(event as TouchEvent | MouseEvent);
 
-    if (
-      onPanStart &&
-      onPanStart({
-        start: { sx: position.x, sy: position.y },
-        offset,
-      }) === false
-    )
-      return;
+    // panstart callback check
+    if (onPanStart && onPanStart({ start: { sx: position.x, sy: position.y }, offset, event }) === false) return;
 
     startPosition = { sx: position.x, sy: position.y };
     prevPosition = position;
@@ -62,28 +53,29 @@ export function Pan(target?: HTMLElement | Document | null): PanInterface {
       velocity = getVelocity(delta);
       prevPosition = position;
 
-      onPanMove &&
+      if (onPanMove) {
         onPanMove({
           start: startPosition,
           current: position,
           offset,
           delta,
           velocity,
+          event,
         });
-      //
+      }
     } else {
       document.removeEventListener('mousemove', movefunc);
       document.removeEventListener('touchmove', movefunc);
     }
   }
 
-  function endfunc(): void {
+  function endfunc(event: TouchEvent | MouseEvent): void {
     if (panning) {
       const lastPostion = positions[positions.length - 5] ?? positions[0];
       const delta = getDelta(lastPostion, prevPosition);
       const { direction, angle } = getDirection(delta);
 
-      onPanEnd &&
+      if (onPanEnd) {
         onPanEnd({
           start: startPosition,
           current: prevPosition,
@@ -91,8 +83,9 @@ export function Pan(target?: HTMLElement | Document | null): PanInterface {
           velocity,
           angle,
           direction,
+          event,
         });
-      //
+      }
     }
 
     document.removeEventListener('mousemove', movefunc);
@@ -112,10 +105,11 @@ export function Pan(target?: HTMLElement | Document | null): PanInterface {
   const pan: PanInterface = {
     add: function (configs: PanConfigs = {} as PanConfigs): PanInterface {
       if (added) return pan;
+
       added = true;
-      ({ panDirection, onPanStart, onPanEnd, onPanMove } = configs);
-      targetElement.addEventListener('mousedown', startfunc);
-      targetElement.addEventListener('touchstart', startfunc);
+      ({ panDirection, onPanStart, onPanEnd, onPanMove, target = target } = configs);
+      target.addEventListener('mousedown', startfunc as EventListener);
+      target.addEventListener('touchstart', startfunc as EventListener);
       return pan;
     },
 
@@ -128,6 +122,14 @@ export function Pan(target?: HTMLElement | Document | null): PanInterface {
         onPanMove = onPanMove,
       } = newConfigs);
 
+      if (newConfigs.target && newConfigs.target !== target) {
+        target.removeEventListener('mousedown', startfunc as EventListener);
+        target.removeEventListener('touchstart', startfunc as EventListener);
+        target = newConfigs.target;
+        target.addEventListener('mousedown', startfunc as EventListener);
+        target.addEventListener('touchstart', startfunc as EventListener);
+      }
+
       return pan;
     },
 
@@ -135,8 +137,8 @@ export function Pan(target?: HTMLElement | Document | null): PanInterface {
       if (!added) return;
       added = false;
       ({ panDirection, onPanStart, onPanEnd, onPanMove } = {} as PanConfigs);
-      targetElement.removeEventListener('mousedown', startfunc);
-      targetElement.removeEventListener('touchstart', startfunc);
+      target.removeEventListener('mousedown', startfunc as EventListener);
+      target.removeEventListener('touchstart', startfunc as EventListener);
       document.removeEventListener('mousemove', movefunc);
       document.removeEventListener('mouseup', endfunc);
       document.removeEventListener('mouseleave', endfunc);
@@ -149,10 +151,7 @@ export function Pan(target?: HTMLElement | Document | null): PanInterface {
 }
 
 function getTargetOffset(target: HTMLElement | Document): Offset {
-  const targetPosition =
-    'getBoundingClientRect' in target
-      ? target.getBoundingClientRect()
-      : { x: 0, y: 0 };
+  const targetPosition = 'getBoundingClientRect' in target ? target.getBoundingClientRect() : { x: 0, y: 0 };
   return { ox: targetPosition.x, oy: targetPosition.y };
 }
 
@@ -184,10 +183,7 @@ function getDirection(delta: Delta): { direction: Directions; angle: number } {
   return { direction, angle };
 }
 
-function getDelta(
-  startPosition: CurrentPosition,
-  endPosition: CurrentPosition
-): Delta {
+function getDelta(startPosition: CurrentPosition, endPosition: CurrentPosition): Delta {
   return {
     dx: endPosition.x - startPosition.x,
     dy: endPosition.y - startPosition.y,
@@ -200,19 +196,14 @@ function getVelocity(delta: Delta): Velocity {
   else return { vx: delta.dx / delta.dt, vy: delta.dy / delta.dt };
 }
 
-function testDirection(
-  delta: Delta,
-  panDirection: PanDirections = PanDirections.any
-): boolean {
+function testDirection(delta: Delta, panDirection: PanDirections = PanDirections.any): boolean {
   if (panDirection === PanDirections.any) return true;
   const { direction } = getDirection(delta);
 
   return (
     panDirection === direction ||
     (panDirection === PanDirections.horizontal &&
-      (direction === PanDirections.right ||
-        direction === PanDirections.left)) ||
-    (panDirection === PanDirections.vertical &&
-      (direction === PanDirections.top || direction === PanDirections.bottom))
+      (direction === PanDirections.right || direction === PanDirections.left)) ||
+    (panDirection === PanDirections.vertical && (direction === PanDirections.top || direction === PanDirections.bottom))
   );
 }

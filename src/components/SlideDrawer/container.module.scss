@@ -1,0 +1,102 @@
+.container {
+  position: fixed;
+  background-color: var(--popup);
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: var(--popup);
+  }
+
+  &.left,
+  &.right {
+    top: 0;
+    bottom: 0;
+    width: 80%;
+    height: 100%;
+
+    &::before {
+      top: 0;
+      bottom: 0;
+    }
+
+    @media (min-width: 480px) {
+      width: 320px;
+    }
+  }
+
+  &.top,
+  &.bottom {
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 40%;
+
+    &::before {
+      left: 0;
+      right: 0;
+    }
+
+    @media (min-width: 480px) {
+      height: 320px;
+    }
+  }
+
+  &.left {
+    left: 0;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    transform: translateX(-100%);
+    border-radius: 0 16px 16px 0;
+
+    &::before {
+      left: -99%;
+    }
+  }
+
+  &.right {
+    right: 0;
+    border-left: 1px solid rgba(0, 0, 0, 0.2);
+    transform: translateX(100%);
+    border-radius: 16px 0 0 16px;
+
+    &::before {
+      right: -99%;
+    }
+  }
+
+  &.top {
+    top: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    transform: translateY(-100%);
+    border-radius: 0 0 16px 16px;
+
+    &::before {
+      top: -99%;
+    }
+  }
+
+  &.bottom {
+    bottom: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+    transform: translateY(100%);
+    border-radius: 16px 16px 0 0;
+
+    &::before {
+      bottom: -99%;
+    }
+  }
+}
+
+.backdrop {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  backface-visibility: hidden;
+}

@@ -1,7 +1,8 @@
 import { useRef, useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
-import { getDimensions, getTop, getLeft, getTransformOrigin } from './utils';
+import { getTop, getLeft, getTransformOrigin } from './utils';
+import { getDimensions } from '../../libs/utils';
 import styles from './container.module.scss';
 import { MenuItem } from './types';
 
@@ -47,8 +48,13 @@ export const Container: React.FC<Props> = ({
   }, [buttonRef, items, setDelayDirection]);
 
   return createPortal(
-    <div id='menu-container' style={{ zIndex }}>
-      <div key='menu-backdrop' onClick={onOutsideClick} className={styles.backdrop} />
+    <div data-id='menu-container'>
+      <div
+        key='menu-backdrop'
+        onClick={onOutsideClick}
+        className={styles.backdrop}
+        style={{ zIndex: zIndex - 1 }} //
+      />
       <motion.div
         key='menu-container'
         ref={containerRef}
@@ -56,6 +62,7 @@ export const Container: React.FC<Props> = ({
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0 }}
         transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
+        style={{ zIndex }}
         className={styles.container}>
         <motion.div layout className={styles.background} />
         {children}

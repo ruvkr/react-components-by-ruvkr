@@ -3,6 +3,7 @@
 import { withStyle } from './withStyle';
 
 import { ReactComponent as AddSvg } from './svg/add.svg';
+import { ReactComponent as ArrowForwardSvg } from './svg/arrow-forward.svg';
 import { ReactComponent as AtCircleSvg } from './svg/at-circle.svg';
 import { ReactComponent as BagSvg } from './svg/bag.svg';
 import { ReactComponent as BarChartSvg } from './svg/bar-chart.svg';
@@ -26,6 +27,7 @@ import { ReactComponent as ExpandSvg } from './svg/expand.svg';
 import { ReactComponent as GameControllerSvg } from './svg/game-controller.svg';
 import { ReactComponent as HeartSvg } from './svg/heart.svg';
 import { ReactComponent as HomeSvg } from './svg/home.svg';
+import { ReactComponent as InformationCircleSvg } from './svg/information-circle.svg';
 import { ReactComponent as LayersSvg } from './svg/layers.svg';
 import { ReactComponent as LinkSvg } from './svg/link.svg';
 import { ReactComponent as ListSvg } from './svg/list.svg';
@@ -43,6 +45,7 @@ import { ReactComponent as TimeSvg } from './svg/time.svg';
 import { ReactComponent as TrophySvg } from './svg/trophy.svg';
 
 export const Add = withStyle(AddSvg);
+export const ArrowForward = withStyle(ArrowForwardSvg);
 export const AtCircle = withStyle(AtCircleSvg);
 export const Bag = withStyle(BagSvg);
 export const BarChart = withStyle(BarChartSvg);
@@ -66,6 +69,7 @@ export const Expand = withStyle(ExpandSvg);
 export const GameController = withStyle(GameControllerSvg);
 export const Heart = withStyle(HeartSvg);
 export const Home = withStyle(HomeSvg);
+export const InformationCircle = withStyle(InformationCircleSvg);
 export const Layers = withStyle(LayersSvg);
 export const Link = withStyle(LinkSvg);
 export const List = withStyle(ListSvg);
