@@ -1,0 +1,18 @@
+.container {
+  background-color: var(--background);
+  &::before {
+    background-color: var(--background);
+  }
+}
+
+.body {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  &.vertical {
+    grid-template-rows: 1fr auto;
+  }
+  &.horizontal {
+    grid-template-columns: 1fr auto;
+  }
+}

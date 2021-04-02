@@ -7,8 +7,7 @@ import { menuItems } from './sample_items';
 import { InformationCircle, ArrowForward } from '../../assets/icons/essentials';
 
 export const MenuView: React.FC = () => {
-  const [show, setShow] = useState(true);
-  const toggleShow = () => setShow(p => !p);
+  const [draging, setDraging] = useState(false);
 
   return (
     <div className={styles.container}>
@@ -17,10 +16,11 @@ export const MenuView: React.FC = () => {
         drag
         dragMomentum={false}
         title='Drag me'
-        onDragStart={toggleShow}
-        onDragEnd={toggleShow}>
+        onDragStart={() => setDraging(true)}
+        onDragEnd={() => setDraging(false)}>
         <Menu items={menuItems} title='Menu' zIndex={910} />
-        <div className={clsx(styles.info, !show && styles.hide)}>
+        <div className={clsx(styles.overlay, draging && styles.disable)} />
+        <div className={clsx(styles.info, draging && styles.hide)}>
           <InformationCircle className={styles.icon} />
           <span>Drag this circle</span>
           <ArrowForward className={styles.icon} />

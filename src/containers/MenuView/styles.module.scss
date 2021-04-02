@@ -14,11 +14,25 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
   cursor: grab;
   border-radius: 150px;
+  background-color: var(--card);
   background: linear-gradient(145deg, #181d23, #1d222a);
   box-shadow: 5px 5px 16px #0e1014, -5px -5px 16px #29303b;
+}
+
+.overlay {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  pointer-events: none;
+
+  &.disable {
+    pointer-events: all;
+  }
 }
 
 .info {

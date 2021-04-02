@@ -23,15 +23,15 @@ export type SideDrawerProps = {
   targetRef?: React.MutableRefObject<HTMLElement | null>;
   stiffness?: number | { open: number; close: number };
   damping?: number | { open: number; close: number };
-  toggler?: React.ComponentType<TogglerProps>;
-  children?: React.ComponentType<ChildrenProps>;
+  toggler?: (props: TogglerProps) => React.ReactElement | null;
+  children?: (props: ChildrenProps) => React.ReactElement | null;
 };
 
 export const SideDrawer: React.FC<SideDrawerProps> = ({
   targetRef,
   zIndex = 100,
-  toggler: Toggler,
-  children: Children,
+  toggler,
+  children,
   className,
   position = 'left',
 }) => {
@@ -49,17 +49,11 @@ export const SideDrawer: React.FC<SideDrawerProps> = ({
         zIndex={zIndex}
         className={className}
         motionValue={motionValue}
-        progress={progress}>
-        {Children && <Children opened={opened} progress={progress} />}
-      </Container>
+        progress={progress}
+        children={children && children({ opened, progress })}
+      />
 
-      {Toggler && (
-        <Toggler
-          opened={opened}
-          progress={progress}
-          onClick={toggle} //
-        />
-      )}
+      {toggler && toggler({ opened, progress, onClick: toggle })}
     </>,
     document.body
   );

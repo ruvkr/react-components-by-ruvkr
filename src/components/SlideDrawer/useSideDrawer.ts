@@ -31,7 +31,7 @@ export function useSideDrawer(configs: {
   const springRef = useRef<SpringInterface>();
   const openedRef = useRef(opened);
   const openedCurrent = useRef(opened);
-  const motionValue = useMotionValue<number>(0);
+  const motionValue = useMotionValue<number>(opened ? 0 : 10000 * multiplier);
   const progress = useMotionValue<number>(opened ? 1 : 0);
   const toggleRef = useRef<() => void>();
   const stiffnessRef = useRef<number | { open: number; close: number }>(400);
