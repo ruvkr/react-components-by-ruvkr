@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import clsx from 'clsx';
 import { SideDrawer, Position } from '../../components/SlideDrawer';
 import { TogglerButton } from '../../components/Buttons';
 import styles from './styles.module.scss';
-import { PositionSwitch } from './PositionSwitch';
+import { Content } from './Content';
 
 export interface SDViewProps {
   targetRef: React.RefObject<HTMLDivElement>;
@@ -11,7 +10,6 @@ export interface SDViewProps {
 
 export const SDView: React.FC<SDViewProps> = ({ targetRef }) => {
   const [position, setPosition] = useState<Position>('left');
-  const orientation = position === 'top' || position === 'bottom' ? 'horizontal' : 'vertical';
 
   return (
     <SideDrawer
@@ -19,13 +17,8 @@ export const SDView: React.FC<SDViewProps> = ({ targetRef }) => {
       zIndex={900}
       targetRef={targetRef}
       className={styles.container}
-      toggler={({ opened, ...rest }) => <TogglerButton {...rest} zIndex={901} position={position} />}>
-      {() => (
-        <div className={clsx(styles.body, styles[orientation])}>
-          <div></div>
-          <PositionSwitch position={position} onChange={setPosition} />
-        </div>
-      )}
+      toggler={togglerProps => <TogglerButton {...togglerProps} zIndex={901} position={position} />}>
+      {childrenProps => <Content {...childrenProps} position={position} onPositionChange={setPosition} />}
     </SideDrawer>
   );
 };

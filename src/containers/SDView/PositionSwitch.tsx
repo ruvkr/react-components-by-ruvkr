@@ -20,8 +20,8 @@ const sides: { position: Position; name: string; icon: JSX.Element }[] = [
 export const PositionSwitch: React.FC<PositionSwitchProps> = ({ position, onChange }) => {
   const _sides = sides.map(s => (
     <div key={s.position} className={clsx(styles.side, styles[s.position])}>
-      <label className={styles.label}>{s.name}</label>
       <ScIconButton $active={position === s.position} icon={s.icon} onClick={() => onChange && onChange(s.position)} />
+      <label className={styles.label}>{s.name}</label>
     </div>
   ));
 
