@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { motion, Variants } from 'framer-motion';
-import { rgba } from 'polished';
 
 interface Props {
   on?: boolean;
@@ -10,29 +9,14 @@ interface Props {
   focusable?: boolean;
 }
 
-export const Switch: React.FC<Props> = ({
-  on = false,
-  size = 24,
-  disabled = false,
-  focusable = true,
-}) => {
+export const Switch: React.FC<Props> = ({ on = false, size = 24, disabled = false, focusable = true }) => {
   const [toggled, setToggled] = useState(on);
 
   const toggler = () => setToggled(p => !p);
 
   return (
-    <ScSwitch
-      $size={size}
-      disabled={disabled}
-      onClick={toggler}
-      tabIndex={focusable ? 0 : -1}
-    >
-      <ScFocus
-        tabIndex={-1}
-        variants={bgVariants}
-        initial={toggled ? 'on' : 'off'}
-        animate={toggled ? 'on' : 'off'}
-      >
+    <ScSwitch $size={size} disabled={disabled} onClick={toggler} tabIndex={focusable ? 0 : -1}>
+      <ScFocus tabIndex={-1} variants={bgVariants} initial={toggled ? 'on' : 'off'} animate={toggled ? 'on' : 'off'}>
         <svg viewBox='0 0 44 24' width='100%' height='100%'>
           <ScPath variants={pathVariants} />
         </svg>
@@ -129,7 +113,7 @@ const ScFocus = styled(motion.div).attrs(p => ({
 
 const ScPath = styled(motion.path).attrs(p => ({
   custom: {
-    col1: rgba(p.theme.col1, 0.5),
-    col2: rgba(p.theme.col1, 1.0),
+    col1: p.theme.col1,
+    col2: p.theme.col1,
   },
 }))``;

@@ -14,7 +14,7 @@ interface Props {
   onClose: () => void;
 }
 
-export const SampleHtml: React.FC<Props> = ({ onClose }) => {
+export const HightlightPage: React.FC<Props> = ({ onClose }) => {
   const [html, setHtml] = useState('');
   const readerRef = useRef<HTMLDivElement>(null);
 
@@ -43,24 +43,16 @@ export const SampleHtml: React.FC<Props> = ({ onClose }) => {
         initial={{ x: '100%' }}
         animate={{ x: '0%' }}
         exit={{ x: '100%' }}
-        transition={{ type: 'spring', stiffness: 300, damping: 33 }}
-      >
+        transition={{ type: 'spring', stiffness: 300, damping: 33 }}>
         <ScHeading>
           <IconButton icon={<ChevronBack />} onClick={onClose} />
           <ScLabel>
-            Sample html taken from{' '}
-            <ScA href='https://markdown-it.github.io/'>
-              https://markdown-it.github.io/
-            </ScA>
+            Sample html taken from <ScA href='https://markdown-it.github.io/'>https://markdown-it.github.io/</ScA>
           </ScLabel>
         </ScHeading>
         <Hightlight readerRef={readerRef} onHighlight={updateLocalHtml} />
         <ScDocContainer>
-          <ScDoc
-            ref={readerRef}
-            id='sample_html'
-            dangerouslySetInnerHTML={{ __html: html }}
-          />
+          <ScDoc ref={readerRef} id='sample_html' dangerouslySetInnerHTML={{ __html: html }} />
         </ScDocContainer>
       </ScContainer>
     </>,

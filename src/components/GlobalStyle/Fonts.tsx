@@ -11,10 +11,13 @@ export const Fonts: React.FC = () => {
   );
 };
 
+const Inter = 'family=Inter:wght@100;200;300;400;500;600;700';
+const FiraMono = 'family=Fira+Mono:wght@400;500;700';
+
 const fontLinks = createPortal(
   <Fragment>
     <link rel='preconnect' href='https://fonts.gstatic.com' />
-    <link href='https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap' rel='stylesheet' />
+    <link href={`https://fonts.googleapis.com/css2?${Inter}&${FiraMono}&display=swap`} rel='stylesheet' />
   </Fragment>,
   document.head
 );

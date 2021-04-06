@@ -4,11 +4,11 @@ import { TogglerButton } from '../../components/Buttons';
 import styles from './styles.module.scss';
 import { Content } from './Content';
 
-export interface SDViewProps {
+export interface SDContentProps {
   targetRef: React.RefObject<HTMLDivElement>;
 }
 
-export const SDView: React.FC<SDViewProps> = ({ targetRef }) => {
+export const SDContent: React.FC<SDContentProps> = ({ targetRef }) => {
   const [position, setPosition] = useState<Position>('left');
 
   return (

@@ -7,7 +7,7 @@ import { menuItems } from './sample_items';
 import { ArrowForward } from '../../assets/icons/essentials';
 import { getPosition } from './utils';
 
-export const MenuView: React.FC = () => {
+export const MenuPage: React.FC = () => {
   const [draging, setDraging] = useState(false);
   const dragableRef = useRef<HTMLDivElement>(null);
   const infoRef = useRef<HTMLDivElement>(null);

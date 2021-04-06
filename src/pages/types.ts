@@ -1,4 +1,4 @@
-export interface ViewItem {
+export interface PageItem {
   id: string;
   name: string;
   path: string;

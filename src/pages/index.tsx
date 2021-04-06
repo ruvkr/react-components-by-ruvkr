@@ -2,14 +2,14 @@ import { useRef, memo } from 'react';
 import styles from './styles.module.scss';
 import { motion, AnimatePresence } from 'framer-motion';
 import { match } from 'path-to-regexp';
-import { useLocation } from '../../hooks';
-import { views } from './views';
-import { ViewItem } from './types';
+import { useLocation } from '../hooks';
+import { pages } from './pages';
+import { PageItem } from './types';
 
-export const Views: React.FC = () => {
+export const Pages: React.FC = () => {
   const { pathname } = useLocation();
-  const matched = views.find(view => match(view.path, { decode: decodeURIComponent })(pathname));
-  const validMatched = useRef<ViewItem>(matched ?? views[0]);
+  const matched = pages.find(view => match(view.path, { decode: decodeURIComponent })(pathname));
+  const validMatched = useRef<PageItem>(matched ?? pages[0]);
   matched && (validMatched.current = matched);
 
   return (
@@ -21,7 +21,7 @@ export const Views: React.FC = () => {
   );
 };
 
-const Content: React.FC<{ item: ViewItem }> = memo(
+const Content: React.FC<{ item: PageItem }> = memo(
   ({ item }) => {
     return (
       <motion.div
