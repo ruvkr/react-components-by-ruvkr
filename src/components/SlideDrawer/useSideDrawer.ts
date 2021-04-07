@@ -13,8 +13,8 @@ export function useSideDrawer(configs: {
   sdRef: React.MutableRefObject<HTMLElement | null>;
   containerRef: React.MutableRefObject<HTMLElement | null>;
   targetRef?: React.MutableRefObject<HTMLElement | null>;
-  stiffness?: number | { open: number; close: number };
-  damping?: number | { open: number; close: number };
+  stiffness: number | { open: number; close: number };
+  damping: number | { open: number; close: number };
 }): {
   opened: boolean;
   motionValue: MotionValue<number>;
@@ -34,8 +34,8 @@ export function useSideDrawer(configs: {
   const motionValue = useMotionValue<number>(opened ? 0 : 10000 * multiplier);
   const progress = useMotionValue<number>(opened ? 1 : 0);
   const toggleRef = useRef<() => void>();
-  const stiffnessRef = useRef<number | { open: number; close: number }>(400);
-  const dampingRef = useRef<number | { open: number; close: number }>({ open: 20, close: 33 });
+  const stiffnessRef = useRef(stiffness);
+  const dampingRef = useRef(damping);
 
   // initialize pan and spring
   useEffect(() => {

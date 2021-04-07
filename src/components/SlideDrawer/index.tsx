@@ -34,10 +34,19 @@ export const SideDrawer: React.FC<SideDrawerProps> = ({
   children,
   className,
   position = 'left',
+  stiffness = 400,
+  damping = { open: 20, close: 33 },
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sdRef = useRef<HTMLDivElement>(null);
-  const { opened, motionValue, progress, toggle } = useSideDrawer({ position, containerRef, sdRef, targetRef });
+  const { opened, motionValue, progress, toggle } = useSideDrawer({
+    position,
+    containerRef,
+    sdRef,
+    targetRef,
+    stiffness,
+    damping,
+  });
 
   return createPortal(
     <>
