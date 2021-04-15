@@ -1,8 +1,8 @@
-import { useRef, useReducer } from 'react';
+import { useRef, useReducer, useCallback } from 'react';
 import { motion, AnimatePresence, AnimateSharedLayout } from 'framer-motion';
 import { MenuItem, ControlItem } from './types';
 import { EllipsisHorizontal, ChevronForward, ChevronBack, Close } from '../../assets/icons/essentials';
-import { Container } from './Container';
+import { InputContainer } from '../common/InputContainer';
 import { Items } from './Items';
 import { Button } from '../Buttons';
 import styles from './menu.module.scss';
@@ -45,6 +45,7 @@ export const Menu: React.FC<MenuProps> = ({
   const { activeItems, prevItems, forwardItems, show } = state;
   const buttonRef = useRef<HTMLButtonElement>(null);
   const delayDirection = useRef<1 | -1>(1);
+  const setDelayDirection = useCallback((value: 1 | -1) => (delayDirection.current = value), []);
 
   const togglerShow = () => {
     if (disabled || items.length === 0) return;
@@ -120,10 +121,11 @@ export const Menu: React.FC<MenuProps> = ({
       <AnimateSharedLayout>
         <AnimatePresence>
           {show && (
-            <Container
+            <InputContainer
               items={activeItems}
-              buttonRef={buttonRef}
-              setDelayDirection={delayDirection}
+              anchorRef={buttonRef}
+              positionCallback={setDelayDirection}
+              domContainerName='menu-container'
               onOutsideClick={() => show && togglerShow()}
               zIndex={zIndex}
               children={

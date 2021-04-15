@@ -1,0 +1,72 @@
+.toggler {
+  width: 100%;
+  font: inherit;
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  cursor: pointer;
+
+  &:focus,
+  &:active {
+    outline: none;
+    .focus {
+      background-color: var(--hover-30);
+      transition: background-color 300ms ease-in-out;
+    }
+  }
+  &:disabled {
+    cursor: not-allowed;
+    .icon {
+      color: var(--disabled);
+      fill: var(--disabled);
+      stroke: var(--disabled);
+      transition: all 300ms ease-in-out;
+    }
+    .name {
+      color: var(--disabled);
+      transition: color 300ms ease-in-out;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) {
+      .focus {
+        background-color: var(--hover-30);
+        transition: background-color 300ms ease-in-out;
+      }
+    }
+  }
+}
+
+.focus {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: auto;
+  align-items: center;
+  background-color: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px;
+  grid-gap: 8px;
+  transition: background-color 300ms ease-in-out;
+
+  &:focus,
+  &:active {
+    outline: none;
+  }
+}
+
+.name {
+  color: var(--accent);
+  text-align: left;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  color: var(--accent);
+  fill: var(--accent);
+  stroke: var(--accent);
+}

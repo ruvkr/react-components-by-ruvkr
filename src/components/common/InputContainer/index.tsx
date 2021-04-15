@@ -2,31 +2,32 @@ import { useRef, useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
 import { getTop, getLeft, getTransformOrigin } from './utils';
-import { getDimensions } from '../../libs/utils';
+import { getDimensions } from '../../../libs/utils';
 import styles from './container.module.scss';
-import { MenuItem } from './types';
 
-interface Props {
-  items: MenuItem[];
-  buttonRef: React.MutableRefObject<HTMLElement | null>;
-  setDelayDirection: React.MutableRefObject<1 | -1>;
+export interface InputContainerProps {
+  items: any;
+  domContainerName?: string;
+  anchorRef: React.MutableRefObject<HTMLElement | null>;
   onOutsideClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  positionCallback?: (value: 1 | -1) => void;
   zIndex?: number;
 }
 
-export const Container: React.FC<Props> = ({
+export const InputContainer: React.FC<InputContainerProps> = ({
   children,
-  buttonRef,
-  setDelayDirection,
+  anchorRef,
   onOutsideClick,
   items,
+  domContainerName = 'input-container',
+  positionCallback,
   zIndex = 100,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const firstRun = useRef(true);
 
   useLayoutEffect(() => {
-    const targetDimensions = getDimensions(buttonRef);
+    const targetDimensions = getDimensions(anchorRef);
     const elementDimensions = getDimensions(containerRef);
     if (!targetDimensions || !elementDimensions || !containerRef.current) return;
     const left = getLeft({ targetDimensions, elementDimensions });
@@ -40,23 +41,23 @@ export const Container: React.FC<Props> = ({
 
     if (position === 'onTop') {
       containerRef.current.style.bottom = window.innerHeight - top - elementDimensions.height + 'px';
-      setDelayDirection.current = -1;
+      positionCallback && positionCallback(-1);
     } else {
       containerRef.current.style.top = top + 'px';
-      setDelayDirection.current = 1;
+      positionCallback && positionCallback(1);
     }
-  }, [buttonRef, items, setDelayDirection]);
+  }, [anchorRef, items, positionCallback]);
 
   return createPortal(
-    <div data-id='menu-container'>
+    <div data-id={domContainerName}>
       <div
-        key='menu-backdrop'
+        key='backdrop'
         onClick={onOutsideClick}
         className={styles.backdrop}
         style={{ zIndex: zIndex - 1 }} //
       />
       <motion.div
-        key='menu-container'
+        key='container'
         ref={containerRef}
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}

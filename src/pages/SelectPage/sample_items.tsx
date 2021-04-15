@@ -1,22 +1,8 @@
 import { v4 as uuid } from 'uuid';
-import { MenuItem } from '../../components/Menu';
-import {
-  CloudUpload,
-  Share,
-  Search,
-  Bookmarks,
-  Cloud,
-  Home,
-  Heart,
-  Document,
-  Download,
-  List,
-  Text,
-  Time,
-  Layers,
-} from '../../assets/icons/essentials';
+import { OptionItem } from '../../components/Select';
+import { CloudUpload, Share, Bookmarks, Cloud, Document, List, Layers } from '../../assets/icons/essentials';
 
-export const menuItems: MenuItem[] = [
+export const options: OptionItem[] = [
   {
     id: uuid(),
     name: 'Upload file',
@@ -44,25 +30,7 @@ export const menuItems: MenuItem[] = [
   {
     id: uuid(),
     name: 'Sort by',
-    isSubMenu: true,
     icon: <List />,
-    items: [
-      {
-        id: uuid(),
-        name: 'File name',
-        icon: <Text />,
-      },
-      {
-        id: uuid(),
-        name: 'Date created',
-        icon: <Time />,
-      },
-      {
-        id: uuid(),
-        name: 'Date Modified',
-        icon: <Time />,
-      },
-    ],
   },
   {
     id: uuid(),
@@ -74,43 +42,86 @@ export const menuItems: MenuItem[] = [
   {
     id: uuid(),
     name: 'Deep submenu',
-    isSubMenu: true,
     icon: <Layers />,
-    items: [
-      {
-        id: uuid(),
-        name: 'Option',
-        icon: <Search />,
-      },
-      {
-        id: uuid(),
-        name: 'Another option',
-        icon: <Home />,
-      },
-      '---',
-      {
-        id: uuid(),
-        name: 'Deep',
-        icon: <Layers />,
-        isSubMenu: true,
-        items: [
-          {
-            id: uuid(),
-            name: 'Deep option 1',
-            icon: <Heart />,
-          },
-          {
-            id: uuid(),
-            name: 'Deep option 2',
-            icon: <Download />,
-          },
-          {
-            id: uuid(),
-            name: 'Deep option 3',
-            icon: <Document />,
-          },
-        ],
-      },
-    ],
+  },
+  {
+    id: uuid(),
+    name: 'Other option 1',
+  },
+  {
+    id: uuid(),
+    name: 'Other option 2',
+  },
+  {
+    id: uuid(),
+    name: 'Other option 3',
+  },
+  {
+    id: uuid(),
+    name: 'Other option 4',
+  },
+  {
+    id: uuid(),
+    name: 'Other option 5',
+  },
+  {
+    id: uuid(),
+    name: 'Other option 6',
+  },
+  {
+    id: uuid(),
+    name: 'Other option 7',
+  },
+  {
+    id: uuid(),
+    name: 'Other option 8',
+  },
+  {
+    id: uuid(),
+    name: 'Other option 9',
+  },
+  {
+    id: uuid(),
+    name: 'Other option 10',
+  },
+  {
+    id: uuid(),
+    name: 'Other option 11',
+  },
+  {
+    id: uuid(),
+    name: 'Other option 12',
+  },
+  {
+    id: uuid(),
+    name: 'Other option 13',
+  },
+  {
+    id: uuid(),
+    name: 'Other option 14',
+  },
+  {
+    id: uuid(),
+    name: 'Other option 15',
+  },
+  {
+    id: uuid(),
+    name: 'Other option 16',
+  },
+  {
+    id: uuid(),
+    name: 'Other option 17',
+  },
+  {
+    id: uuid(),
+    name: 'Other option 18',
+  },
+  {
+    id: uuid(),
+    name: 'Other option 19',
+  },
+  {
+    id: uuid(),
+    name: 'Other option 20',
   },
 ];

@@ -2,6 +2,7 @@ import { v4 as uuid } from 'uuid';
 import { PageItem } from './types';
 import { HomePage } from './HomePage';
 import { MenuPage } from './MenuPage';
+import { SelectPage } from './SelectPage';
 
 export const pages: PageItem[] = [
   {
@@ -15,5 +16,11 @@ export const pages: PageItem[] = [
     name: 'menu',
     path: '/menu',
     component: MenuPage,
+  },
+  {
+    id: uuid(),
+    name: 'select',
+    path: '/select',
+    component: SelectPage,
   },
 ];

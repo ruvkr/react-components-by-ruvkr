@@ -1,4 +1,4 @@
-import { DimensionInfo } from '../../libs/utils';
+import { DimensionInfo } from '../../../libs/utils';
 
 export type PositionInfo = {
   top?: number;
