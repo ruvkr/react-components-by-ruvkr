@@ -1,4 +1,3 @@
-import styled from 'styled-components';
 import clsx from 'clsx';
 import styles from './button.module.scss';
 
@@ -9,12 +8,13 @@ export const buttonClasses = {
   name: styles.name,
 };
 
-export interface ButtonBareProps {
+export interface UnstyledButtonProps {
   disabled?: boolean;
   icon?: JSX.Element;
   name?: string;
   title?: string;
   badge?: JSX.Element;
+  style?: React.CSSProperties;
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   forwardRef?: React.MutableRefObject<HTMLButtonElement | null>;
   classNames?: {
@@ -25,11 +25,11 @@ export interface ButtonBareProps {
   };
 }
 
-export interface ButtonProps extends Omit<ButtonBareProps, 'classNames'> {
+export interface ButtonProps extends Omit<UnstyledButtonProps, 'classNames'> {
   className?: string;
 }
 
-export const ButtonBare: React.FC<ButtonBareProps> = ({
+export const UnstyledButton: React.FC<UnstyledButtonProps> = ({
   disabled = false,
   icon,
   name,
@@ -37,6 +37,7 @@ export const ButtonBare: React.FC<ButtonBareProps> = ({
   classNames,
   onClick,
   badge,
+  style,
   forwardRef,
 }) => {
   return (
@@ -45,10 +46,11 @@ export const ButtonBare: React.FC<ButtonBareProps> = ({
       onClick={onClick}
       title={title ?? name}
       className={classNames?.container}
+      style={style}
       ref={forwardRef}>
       <div tabIndex={-1} className={classNames?.focus}>
         {icon && <div className={classNames?.icon}>{icon}</div>}
-        {name && <ScName className={classNames?.name} $pleft={icon ? 0 : 8} $pright={badge ? 0 : 8} children={name} />}
+        {name && <div className={classNames?.name} children={name} />}
         {badge && <div className={classNames?.icon}>{badge}</div>}
       </div>
     </button>
@@ -57,7 +59,7 @@ export const ButtonBare: React.FC<ButtonBareProps> = ({
 
 export const Button: React.FC<ButtonProps> = ({ className, ...rest }) => {
   return (
-    <ButtonBare
+    <UnstyledButton
       {...rest}
       classNames={{
         container: clsx(styles.container, className),
@@ -68,8 +70,3 @@ export const Button: React.FC<ButtonProps> = ({ className, ...rest }) => {
     />
   );
 };
-
-const ScName = styled.div<{ $pleft: number; $pright: number }>`
-  padding-left: ${p => p.$pleft}px;
-  padding-right: ${p => p.$pright}px;
-`;

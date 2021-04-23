@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import styled from 'styled-components';
 import styles from './iconbutton.module.scss';
+import { UnstyledButton } from './Button';
 
 export const iconButtonClasses = {
   container: styles.container,
@@ -8,52 +8,22 @@ export const iconButtonClasses = {
   icon: styles.icon,
 };
 
-export interface IconButtonBareProps {
+export interface IconButtonProps {
   size?: number;
-  disabled?: boolean;
   icon: JSX.Element;
+  className?: string;
+  style?: React.CSSProperties;
+  disabled?: boolean;
   title?: string;
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   forwardRef?: React.MutableRefObject<HTMLButtonElement | null>;
-  classNames?: {
-    container?: string;
-    focus?: string;
-    icon?: string;
-  };
 }
 
-export interface IconButtonProps extends Omit<IconButtonBareProps, 'classNames'> {
-  className?: string;
-}
-
-export const IconButtonBare: React.FC<IconButtonBareProps> = ({
-  size = 36,
-  disabled = false,
-  icon,
-  title,
-  classNames,
-  onClick,
-  forwardRef,
-}) => {
+export const IconButton: React.FC<IconButtonProps> = ({ className, size = 36, ...rest }) => {
   return (
-    <ScButton
-      $size={size}
-      title={title}
-      disabled={disabled}
-      className={classNames?.container}
-      onClick={onClick}
-      ref={forwardRef}>
-      <div tabIndex={-1} className={classNames?.focus}>
-        <div className={classNames?.icon}>{icon}</div>
-      </div>
-    </ScButton>
-  );
-};
-
-export const IconButton: React.FC<IconButtonProps> = ({ className, ...rest }) => {
-  return (
-    <IconButtonBare
+    <UnstyledButton
       {...rest}
+      style={{ '--size': size + 'px' } as React.CSSProperties}
       classNames={{
         container: clsx(styles.container, className),
         focus: styles.focus,
@@ -62,8 +32,3 @@ export const IconButton: React.FC<IconButtonProps> = ({ className, ...rest }) =>
     />
   );
 };
-
-const ScButton = styled.button<{ $size: number }>`
-  width: ${p => p.$size}px;
-  height: ${p => p.$size}px;
-`;

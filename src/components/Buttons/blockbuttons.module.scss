@@ -1,4 +1,5 @@
 .container {
+  display: block;
   width: 100%;
   font: inherit;
   border: none;
@@ -43,8 +44,7 @@
   height: 100%;
   padding: 12px;
   background-color: transparent;
-  display: grid;
-  grid-gap: 12px;
+  display: flex;
   align-items: center;
   transition: background-color 300ms ease-in-out;
 
@@ -55,6 +55,7 @@
 }
 
 .icon {
+  flex-shrink: 0;
   display: flex;
   width: 20px;
   height: 20px;
@@ -65,7 +66,9 @@
 }
 
 .name {
+  flex-grow: 1;
   text-align: left;
   color: var(--primary);
   transition: color 300ms ease-in-out;
+  padding: 0 12px;
 }
