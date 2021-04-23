@@ -15,27 +15,36 @@ export function useSideDrawer(configs: {
   targetRef?: React.MutableRefObject<HTMLElement | null>;
   stiffness: number | { open: number; close: number };
   damping: number | { open: number; close: number };
+  peek: number;
 }): {
   opened: boolean;
   motionValue: MotionValue<number>;
   progress: MotionValue<number>;
   toggle: () => void;
 } {
-  const { position, sdRef, containerRef, targetRef, stiffness, damping } = configs;
+  const { position, peek, sdRef, containerRef, targetRef, stiffness, damping } = configs;
   const [opened, setOpened] = useState(false);
   const [force, setForce] = useState({});
-  const multiplier = position === 'left' || position === 'top' ? -1 : 1;
-  const plane: Plane = position === 'top' || position === 'bottom' ? 'vertical' : 'horizontal';
-  const dimensions = useRef<DimensionInfo>();
-  const panRef = useRef<PanInterface>();
-  const springRef = useRef<SpringInterface>();
+
   const openedRef = useRef(opened);
   const openedCurrent = useRef(opened);
-  const motionValue = useMotionValue<number>(opened ? 0 : 10000 * multiplier);
   const progress = useMotionValue<number>(opened ? 1 : 0);
   const toggleRef = useRef<() => void>();
   const stiffnessRef = useRef(stiffness);
   const dampingRef = useRef(damping);
+  const dimensions = useRef<DimensionInfo>();
+  const panRef = useRef<PanInterface>();
+  const springRef = useRef<SpringInterface>();
+
+  const multiplier = position === 'left' || position === 'top' ? -1 : 1;
+  const plane: Plane = position === 'top' || position === 'bottom' ? 'vertical' : 'horizontal';
+  const motionValue = useMotionValue<number>(
+    opened //
+      ? 0
+      : plane === 'vertical'
+      ? window.innerHeight * multiplier
+      : window.innerWidth * multiplier
+  );
 
   // initialize pan and spring
   useEffect(() => {
@@ -63,8 +72,8 @@ export function useSideDrawer(configs: {
     const oppositePosition = getOpposite(position);
     const spring = springRef.current;
     const pan = panRef.current;
-    const maxValue = dimensions.current[vars.size] * multiplier;
-    const extendedValue = maxValue * 0.2 * -1; // extend 20%
+    const maxValue = (dimensions.current[vars.size] - peek) * multiplier;
+    const extendedValue = dimensions.current[vars.size] * multiplier * 0.2 * -1; // extend 20%
 
     let opened = openedCurrent.current;
     let currentValue = motionValue.get();
@@ -155,6 +164,7 @@ export function useSideDrawer(configs: {
     multiplier,
     plane,
     position,
+    peek,
     containerRef,
     targetRef,
     sdRef,

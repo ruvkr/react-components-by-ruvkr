@@ -20,7 +20,8 @@ export type SideDrawerProps = {
   className?: string;
   zIndex?: number;
   position: 'left' | 'right' | 'bottom' | 'top';
-  targetRef?: React.MutableRefObject<HTMLElement | null>;
+  peek?: number;
+  targetRef?: React.MutableRefObject<HTMLElement | null> | 'self';
   stiffness?: number | { open: number; close: number };
   damping?: number | { open: number; close: number };
   toggler?: (props: TogglerProps) => React.ReactElement | null;
@@ -34,6 +35,7 @@ export const SideDrawer: React.FC<SideDrawerProps> = ({
   children,
   className,
   position = 'left',
+  peek = 0,
   stiffness = 400,
   damping = { open: 20, close: 33 },
 }) => {
@@ -41,9 +43,10 @@ export const SideDrawer: React.FC<SideDrawerProps> = ({
   const sdRef = useRef<HTMLDivElement>(null);
   const { opened, motionValue, progress, toggle } = useSideDrawer({
     position,
+    peek,
     containerRef,
     sdRef,
-    targetRef,
+    targetRef: targetRef ? (targetRef === 'self' ? containerRef : targetRef) : undefined,
     stiffness,
     damping,
   });
