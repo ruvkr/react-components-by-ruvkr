@@ -16,3 +16,9 @@ export type Theme = {
     info: string;
   };
 };
+
+export type Font = {
+  name: string;
+  category: string;
+  weights: number[];
+};

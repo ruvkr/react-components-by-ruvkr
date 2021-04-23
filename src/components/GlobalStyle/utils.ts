@@ -1,5 +1,21 @@
 import Color from 'color';
-import { Theme } from './types';
+import { Theme,Font } from '../../store/configs';
+import { unionBy } from 'lodash';
+
+export function createFontApi(fonts: Font[]) {
+  // filter duplicate fonts
+  const uniqs = unionBy(fonts, 'name');
+
+  // transform >>> 'family=Font+Name:wght@400;700'
+  const familyStrings = uniqs.map(f => {
+    const weights = f.weights.sort((a, b) => a - b).join(';');
+    const familyName = f.name.replace(/\s/g, '+');
+    return `family=${familyName}:wght@${weights}`;
+  });
+
+  // join family strings by '&'
+  return familyStrings.join('&');
+}
 
 export function createColorVariables(theme: Theme) {
   const colors: { name: string; rgb: Color }[] = [];
