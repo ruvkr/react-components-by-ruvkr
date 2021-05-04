@@ -14,6 +14,7 @@ export interface TogglerProps {
 export interface ChildrenProps {
   opened: boolean;
   progress: MotionValue<number>;
+  toggle: () => void;
 }
 
 export type SideDrawerProps = {
@@ -62,7 +63,7 @@ export const SideDrawer: React.FC<SideDrawerProps> = ({
         className={className}
         motionValue={motionValue}
         progress={progress}
-        children={children && children({ opened, progress })}
+        children={children && children({ opened, progress, toggle })}
       />
 
       {toggler && toggler({ opened, progress, onClick: toggle })}

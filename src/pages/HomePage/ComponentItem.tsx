@@ -26,7 +26,7 @@ export const ComponentItem: React.FC<ComponentItemProps> = ({
   return (
     <button className={styles.item} onClick={onClick} disabled={disabled} title={title ?? name}>
       <div tabIndex={-1} className={styles.focus}>
-        <ScImage $imageSrc={imageSrc} className={styles.image}></ScImage>
+        <ScImage $imageSrc={imageSrc} src={imageSrc} className={styles.image}></ScImage>
         <div className={styles.info}>
           <div className={styles.name}>{name}</div>
           {_highlights}
@@ -36,13 +36,13 @@ export const ComponentItem: React.FC<ComponentItemProps> = ({
   );
 };
 
-const ScImage = styled.div<{ $imageSrc?: string }>(p => {
+const ScImage = styled.img<{ $imageSrc?: string }>(p => {
   if (p.$imageSrc) {
     return css`
-      background-image: url('${p.$imageSrc}');
-      background-position: center;
-      background-size: cover;
-      background-repeat: no-repeat;
+      /* background-image: url('${p.$imageSrc}'); */
+      /* background-position: center; */
+      /* background-size: cover; */
+      /* background-repeat: no-repeat; */
     `;
   }
 });

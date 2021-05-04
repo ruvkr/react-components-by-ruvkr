@@ -1,0 +1,30 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+
+  &.left,
+  &.right,
+  &.top,
+  &.bottom {
+    flex-direction: column;
+  }
+
+  &.left,
+  &.right {
+    justify-content: center;
+  }
+
+  @media (min-width: 720px) {
+    &.top,
+    &.bottom {
+      flex-direction: row;
+      justify-content: center;
+      .components,
+      .settings {
+        height: 100%;
+        overflow: auto;
+      }
+    }
+  }
+}

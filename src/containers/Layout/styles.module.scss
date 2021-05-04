@@ -1,4 +1,20 @@
 .container {
   width: 100%;
   height: 100%;
+
+  &.left {
+    padding-left: 64px;
+  }
+
+  &.right {
+    padding-right: 64px;
+  }
+
+  &.top {
+    padding-top: 64px;
+  }
+
+  &.bottom {
+    padding-bottom: 64px;
+  }
 }

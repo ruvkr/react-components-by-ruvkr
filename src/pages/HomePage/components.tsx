@@ -5,7 +5,7 @@ export const components: ComponentItemType[] = [
     id: 'menu',
     name: 'Menu',
     path: '/menu',
-    imageSrc: 'thumbs/menu.png',
+    imageSrc: 'thumbs/menu3.png',
     highlights: ['Highlight 1', 'Highlight 2', 'Highlight 3'],
   },
   {

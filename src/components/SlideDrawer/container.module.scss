@@ -8,6 +8,7 @@
     width: 100%;
     height: 100%;
     background-color: var(--popup);
+    z-index: -1;
   }
 
   &.left,
@@ -23,7 +24,7 @@
     }
 
     @media (min-width: 480px) {
-      width: 320px;
+      width: 384px;
     }
   }
 
@@ -40,13 +41,12 @@
     }
 
     @media (min-width: 720px) {
-      height: 320px;
+      height: 400px;
     }
   }
 
   &.left {
     left: 0;
-    border-right: 1px solid rgba(0, 0, 0, 0.2);
     transform: translateX(-100%);
 
     &::before {
@@ -56,7 +56,6 @@
 
   &.right {
     right: 0;
-    border-left: 1px solid rgba(0, 0, 0, 0.2);
     transform: translateX(100%);
 
     &::before {
@@ -66,7 +65,6 @@
 
   &.top {
     top: 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     transform: translateY(-100%);
 
     &::before {
@@ -76,7 +74,6 @@
 
   &.bottom {
     bottom: 0;
-    border-top: 1px solid rgba(0, 0, 0, 0.2);
     transform: translateY(100%);
 
     &::before {

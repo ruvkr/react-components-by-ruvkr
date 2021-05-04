@@ -4,3 +4,42 @@
     background-color: var(--background);
   }
 }
+
+.content {
+  width: 100%;
+  height: 100%;
+  display: grid;
+
+  &.left {
+    grid-template-columns: 1fr 64px;
+    grid-template-areas: 'main bar';
+  }
+
+  &.right {
+    grid-template-columns: 64px 1fr;
+    grid-template-areas: 'bar main';
+  }
+
+  &.top {
+    grid-template-rows: 1fr 64px;
+    grid-template-areas: 'main' 'bar';
+  }
+
+  &.bottom {
+    grid-template-rows: 64px 1fr;
+    grid-template-areas: 'bar' 'main';
+  }
+}
+
+.bar {
+  grid-area: bar;
+  width: 100%;
+  height: 100%;
+}
+
+.main {
+  width: 100%;
+  height: 100%;
+  grid-area: main;
+  overflow: auto;
+}

@@ -1,0 +1,17 @@
+.container {
+  padding: 16px;
+}
+
+.label {
+  display: block;
+  color: var(--accent);
+  padding: 12px 8px;
+  font-weight: 500;
+}
+
+.components {
+  width: 100%;
+  display: grid;
+  grid-gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+}

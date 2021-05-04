@@ -8,11 +8,19 @@
 }
 
 .heading {
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--secondary-50);
+  color: var(--secondary);
+  font-weight: 500;
+  margin: 16px 0;
+  text-align: center;
+  @media (min-width: 480px) {
+    text-align: left;
+  }
+}
+
+.details {
+  color: var(--accent);
+  margin: 16px 0;
+  font-size: 14px;
 }
 
 .itemscontainer {

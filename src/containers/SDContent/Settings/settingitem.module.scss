@@ -1,0 +1,81 @@
+.container {
+  font: inherit;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+
+  &:focus,
+  &:active {
+    outline: none;
+    .icon {
+      box-shadow: 0 0 0 2px var(--accent);
+      transition: box-shadow 300ms ease-in-out;
+    }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    .icon {
+      color: var(--disabled);
+      fill: var(--disabled);
+      stroke: var(--disabled);
+      transition: all 300ms ease-in-out;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover:not(:disabled) {
+      .icon {
+        box-shadow: 0 0 0 2px var(--accent);
+        transition: box-shadow 300ms ease-in-out;
+      }
+    }
+  }
+
+  &.active {
+    .name {
+      color: var(--primary);
+      transition: color 300ms ease-in-out;
+    }
+
+    .icon {
+      background-color: var(--accent);
+      color: var(--card);
+      fill: var(--card);
+      stroke: var(--card);
+      transition: all 300ms ease-in-out;
+    }
+  }
+}
+
+.focus {
+  width: 100%;
+  height: 100%;
+  transition: all 300ms ease-in-out;
+
+  &:focus,
+  &:active {
+    outline: none;
+  }
+}
+
+.name {
+  padding-top: 8px;
+  font-size: 12px;
+  color: var(--secondary-50);
+  transition: color 300ms ease-in-out;
+  text-align: left;
+}
+
+.icon {
+  display: flex;
+  border-radius: 8px;
+  padding: percentage(2/9);
+  background-color: var(--card);
+  color: var(--accent);
+  fill: var(--accent);
+  stroke: var(--accent);
+  transition: all 300ms ease-in-out;
+}
